@@ -1,0 +1,19 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+.row {
+  display: flex;
+}
+.cell {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background-color: #e0e0e0;
+}

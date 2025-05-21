@@ -1,0 +1,14 @@
+<ion-content>
+  <div class="board">
+    <div *ngFor="let row of table; let i = index" class="row">
+      <div *ngFor="let cell of row; let j = index" class="cell" (click)="openCellOnBoard(i, j)">
+        <!-- Mostrar contenido según estado -->
+        <span *ngIf="cell.revelated">
+          {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
+        </span>
+        <span *ngIf="!cell.revelated && cell.flag">🚩</span>
+        <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
