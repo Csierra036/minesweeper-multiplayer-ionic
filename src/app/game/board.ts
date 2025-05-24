@@ -1,20 +1,25 @@
 import { Cell } from "./cell";
 
-const MINES = 10;
-const SIZE = 8;
-
 
 export class Board{
     gameOver= false;
     table: Cell[][] = [];
-    constructor() {
+    mines: number = 0;
+    size: number = 0;
+    
+    constructor() {}
+
+
+    setDifficulty(size: number, mines: number){
+        this.size = size;
+        this.mines = mines;
+
         this.table = [];
 
-        for(let i=0; i<SIZE; i++){
-            this.table[i]= [];
-            for(let j=0; j<SIZE; j++){
-                this.table[i][j] = new Cell();
-
+        for (let i = 0; i < size; i++) {
+            this.table[i] = [];
+            for (let j = 0; j < size; j++) {
+            this.table[i][j] = new Cell();
             }
         }
     }
@@ -22,9 +27,9 @@ export class Board{
 
     setMinesRandom() {
         let plant_mines = 0;
-        while (plant_mines < MINES) {
-        const x = Math.floor(Math.random() * SIZE);
-        const y = Math.floor(Math.random() * SIZE);
+        while (plant_mines < this.mines) {
+        const x = Math.floor(Math.random() * this.size);
+        const y = Math.floor(Math.random() * this.size);
         const cell = this.table[x][y];
 
         if (!cell.mine) {
@@ -36,8 +41,8 @@ export class Board{
 
 
     calculateAdjacentMines() {
-        for (let i = 0; i < SIZE; i++) {
-            for (let j = 0; j < SIZE; j++) {
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
             if (this.table[i][j].mine) {
                 this.table[i][j].adjacentMines = -1; // opcional: marca con -1 las minas
                 continue;
@@ -53,9 +58,9 @@ export class Board{
                 // Verifica que esté dentro de los límites y que sea una mina
                 if (
                     ni >= 0 &&
-                    ni < SIZE &&
+                    ni < this.size &&
                     nj >= 0 &&
-                    nj < SIZE &&
+                    nj < this.size &&
                     this.table[ni][nj].mine
                 ) {
                     count++;
@@ -87,8 +92,8 @@ export class Board{
 
                     // Verifica que esté dentro del tablero
                     const inBounds =
-                    neighborRow >= 0 && neighborRow < SIZE &&
-                    neighborCol >= 0 && neighborCol < SIZE;
+                    neighborRow >= 0 && neighborRow < this.size &&
+                    neighborCol >= 0 && neighborCol < this.size;
 
                     if (inBounds) {
                         this.openCell(neighborRow, neighborCol);

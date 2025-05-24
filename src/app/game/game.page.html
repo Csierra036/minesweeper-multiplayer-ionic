@@ -1,4 +1,7 @@
 <ion-content>
+  <div class="score-board">Left</div>
+  <div class="score-board">Right</div>
+
   <div class="board">
     <div *ngFor="let row of table; let i = index" class="row">
       <div *ngFor="let cell of row; let j = index" class="cell" (click)="openCellOnBoard(i, j)">
@@ -10,5 +13,10 @@
         <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
       </div>
     </div>
+  </div>
+
+  <div class="button-container">
+    <ion-button class="btn">Flag</ion-button>
+    <ion-button class="btn">Spade</ion-button>
   </div>
 </ion-content>
