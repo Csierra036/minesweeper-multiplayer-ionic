@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
 import { Board } from './board';
 import { scoreBoard } from './scoreBoard';
+import { GameService } from '../services/game.service';
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
@@ -17,7 +18,9 @@ export class GamePage implements OnInit {
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
 
-  constructor() {}
+  constructor(gameService: GameService) {
+    this.board = gameService.getBoard();
+  }
 
   ngOnInit() {}
 
