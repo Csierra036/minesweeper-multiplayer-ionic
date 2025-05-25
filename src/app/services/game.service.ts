@@ -8,16 +8,10 @@ import { io, Socket } from 'socket.io-client';
 
 export class GameService {
   private board!: Board;
-  private socket: Socket;
+  private socket!: Socket;
 
-  constructor(){
-    this.socket = io('http://localhost:8181');
+  constructor(){}
 
-    this.socket.on('mensaje', (data: string) => {
-      console.log('Mensaje del servidor:', data);
-      alert('Servidor dice: ' + data);
-    });
-  }
 
   //Configuration the board for select the difficulty
   setBoard(board: Board) {
@@ -30,7 +24,27 @@ export class GameService {
     return this.board;
   }
 
-  //SOCKETS
+  
+  connectToServer(serverIp: string, serverPort: string) {
+    this.socket = io(`http://${serverIp}:${serverPort}`);
+    this.socket.on('mensaje', (data: string) => {
+      console.log('Mensaje del servidor:', data);
+      alert('Servidor dice: ' + data);
+    });
+  }
+
+
+  //Join the room as player number 2
+  joinRoomCreated(serverIp: string, serverPort: string): boolean{
+    const isCreated = this.board !== undefined;
+    
+    if (isCreated) {
+      this.connectToServer(serverIp, serverPort);
+    }
+    return isCreated;
+  }
+  
+
   sendMessage(event: string, data: any) {
     this.socket.emit(event, data);
   }
