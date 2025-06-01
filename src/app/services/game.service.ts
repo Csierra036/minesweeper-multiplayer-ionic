@@ -9,7 +9,6 @@ import { ToastService } from './toast.service';
 export class GameService {
   private board!: Board;
   private socket!: Socket;
-
   constructor(private toastService: ToastService){}
 
 
@@ -24,7 +23,19 @@ export class GameService {
     return this.board;
   }
 
-  
+
+  rotateRound(player: number) {
+    if (player === 1) {
+      player = 2;
+      this.toastService.createToast('Turno del jugador 2', 'info');
+    } else if (player === 2) {
+      player = 1;
+      this.toastService.createToast('Turno del jugador 1', 'info');
+    }
+    return player;
+  }
+
+
   openCellOnBoard(row: number, col: number) {
     if (this.board.gameOver) return;
 
