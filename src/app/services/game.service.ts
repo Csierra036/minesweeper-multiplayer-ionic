@@ -93,9 +93,8 @@ export class GameService {
 
   connectToServer(serverIp: string, serverPort: string) {
     this.socket = io(`http://${serverIp}:${serverPort}`,{
-      transports: ['websocket'], // Fuerza WebSocket
-      rejectUnauthorized: false, // Solo para desarrollo (ignora errores de certificado)
-      secure: true, // Usa HTTPS
+      transports: ['websocket'], // Fuerza WebSocket,
+      rejectUnauthorized: false
     });
     this.socket.on('mensaje', (data: string) => {
       console.log('Mensaje del servidor:', data);
