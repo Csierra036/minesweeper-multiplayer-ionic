@@ -31,6 +31,7 @@
     "@capacitor/status-bar": "7.0.1",
     "@ionic/angular": "^8.0.0",
     "@nestjs/mapped-types": "*",
+    "@tailwindcss/postcss": "^4.1.10",
     "ionicons": "^7.0.0",
     "node-addon-api": "^8.4.0",
     "node-gyp": "^11.2.0",
