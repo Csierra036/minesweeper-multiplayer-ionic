@@ -1,3 +1,8 @@
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+
+@import 'tailwindcss/utilities';
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -42,10 +47,25 @@
     src: url(./assets/fonts/Super\ Mario\ Bros.\ NES.ttf) format('truetype');
 }
 
+
 :root {
   --ion-font-family: 'Super-Mario-Bros-NES';
+  color-scheme: light only;
 }
+
+
+.md {
+  color-scheme: light only;
+}
+
 
 * {
   font-family: 'Super-Mario-Bros-NES';
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
 }

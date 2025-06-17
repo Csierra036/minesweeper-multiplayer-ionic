@@ -1,11 +1,22 @@
 <ion-content [fullscreen]="true">
-  <ion-content class="ion-padding">
+  <div class="title">
+    <ion-title class=" text-3xl subpixel-antialiased">
+      Minesweeper
+    </ion-title>
+    <ion-text class="text-xs subpixel-antialiased">
+      Created by: Cristian Sierra
+    </ion-text>
+  </div>
+
+  <ion-img class="logo" src="assets/mine.png" alt="Minesweeper home"></ion-img>
+  
+  <div class="center-buttons">
     <ion-button expand="block" routerLink="/create-room-page">
       Create Room
     </ion-button>
 
-    <ion-button expand="block" routerLink="/join-room-page" color="secondary">
+    <ion-button class="pt-10" expand="block" routerLink="/join-room-page" color="secondary">
       Join the Room
     </ion-button>
-  </ion-content>
+  </div>
 </ion-content>
