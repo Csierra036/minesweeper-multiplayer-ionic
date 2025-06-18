@@ -12,26 +12,27 @@ import { Platform } from '@ionic/angular';
 })
 export class AppComponent {
   constructor(private platform: Platform) {
-    this.initializeApp();
+    // this.initializeApp();
+    this.showSplash();
   }
 
-  private async initializeApp() {
-    await this.platform.ready();
+  // private async initializeApp() {
+  //   await this.platform.ready();
     
-    // Fuerza el modo claro de manera más robusta
-    document.body.classList.remove('dark');
-    document.body.classList.add('light');
+  //   // Fuerza el modo claro de manera más robusta
+  //   document.body.classList.remove('dark');
+  //   document.body.classList.add('light');
     
-    // Configuración adicional para evitar el modo oscuro
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      document.documentElement.style.setProperty(
-        'color-scheme', 
-        'light'
-      );
-    }
+  //   // Configuración adicional para evitar el modo oscuro
+  //   if (this.platform.is('android') || this.platform.is('ios')) {
+  //     document.documentElement.style.setProperty(
+  //       'color-scheme', 
+  //       'light'
+  //     );
+  // //   }
     
-    await this.showSplash();
-  }
+  //   await this.showSplash();
+  // }
 
   private async showSplash() {
     try {

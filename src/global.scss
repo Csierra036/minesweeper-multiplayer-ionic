@@ -39,7 +39,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
 
 
 @font-face{
@@ -50,22 +50,15 @@
 
 :root {
   --ion-font-family: 'Super-Mario-Bros-NES';
-  color-scheme: light only;
+  // color-scheme: light only;
 }
 
 
-.md {
-  color-scheme: light only;
-}
+// .md {
+//   color-scheme: light only;
+// }
 
 
 * {
   font-family: 'Super-Mario-Bros-NES';
-}
-
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: light;
-  }
 }
