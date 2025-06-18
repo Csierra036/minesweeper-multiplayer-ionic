@@ -18,16 +18,20 @@
   flex-direction: column;
   gap: 30px;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .big-button {
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  --padding-start: 32px;
-  --padding-end: 32px;
+  --padding-top: 30px;
+  --padding-bottom: 30px;
+  --padding-start: 50px;
+  --padding-end: 50px;
   font-size: 20px;
   border-radius: 12px;
+  text-shadow: 0 0 10px black,
+              0 0 10px black,
+              0 0 10px black,
+              0 0 10px black;
 }
 
 ion-content {
