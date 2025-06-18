@@ -1,3 +1,8 @@
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+
+@import 'tailwindcss/utilities';
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -34,4 +39,26 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+@font-face{
+    font-family: 'Super-Mario-Bros-NES';
+    src: url(./assets/fonts/Super\ Mario\ Bros.\ NES.ttf) format('truetype');
+}
+
+
+:root {
+  --ion-font-family: 'Super-Mario-Bros-NES';
+  // color-scheme: light only;
+}
+
+
+// .md {
+//   color-scheme: light only;
+// }
+
+
+* {
+  font-family: 'Super-Mario-Bros-NES';
+}

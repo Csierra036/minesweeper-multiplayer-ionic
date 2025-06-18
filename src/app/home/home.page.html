@@ -1,5 +1,25 @@
 <ion-content [fullscreen]="true">
-  <ion-content class="ion-padding">
-    <ion-button expand="full" (click)="enviarMensaje()">Enviar Mensaje al Servidor</ion-button>
-  </ion-content>
+  <div class="title">
+    <ion-text class="main-title">
+      Minesweeper
+    </ion-text>
+    <div class="creators-paragraph">
+      <ion-text class="text-xs subpixel-antialiased">
+        Created by: Cristian Sierra
+      </ion-text>
+    </div>
+  </div>
+
+  
+  <div class="center-buttons">
+    <ion-button  routerLink="/create-room-page">
+      <img src="assets/icon/create_room.png" alt="Icono" style="width: 180px; height: 180px;" >
+      Create Room
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page">
+      <img src="assets/icon/join_room.png" alt="Icono" style="width: 180px; height: 180px;" >
+      Join Room
+    </ion-button>
+  </div>
 </ion-content>

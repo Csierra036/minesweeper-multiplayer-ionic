@@ -1,9 +1,24 @@
+.container-select-mode{
+  margin-top: 100px;
+  color: #fff;
+  text-shadow: 0 0 5px black,
+              0 0 5px black,
+              0 0 5px black,
+              0 0 5px black;
+  
+}
+
+.container-select-mode .select-mode{
+  text-align: center;
+  font-size: 50px;
+}
+
 .mode-buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 30px;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .big-button {
@@ -13,4 +28,8 @@
   --padding-end: 32px;
   font-size: 20px;
   border-radius: 12px;
+}
+
+ion-content {
+  --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
 }

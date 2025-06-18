@@ -1,50 +1,51 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { Board } from './board';
 import { scoreBoard } from './scoreBoard';
+import { GameService } from '../services/game.service';
+
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton]
+  imports: [IonContent, CommonModule, FormsModule, IonButton,  IonIcon]
 })
+
 
 export class GamePage implements OnInit {
   board: Board = new Board();
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
+  activeFlagMode: boolean = false;
+  playerRound: number = 1;
+  constructor(private gameService: GameService) {
+    this.board = this.gameService.getBoard();
+  }
 
-  constructor() {}
 
   ngOnInit() {}
 
+
   openCellOnBoard(row: number, col: number) {
-    if (this.board.gameOver) return;
-
-    const cell = this.board.table[row][col];
-    if (cell.revelated || cell.flag) return;
-
-    this.board.openCell(row, col);
-
-    // Opcional: si cae en mina, marcar el juego como terminado
-    if (cell.mine) {
-      this.board.gameOver = true;
-      alert('💥 ¡Perdiste!');
+    if (this.activeFlagMode) {
+      this.gameService.setFlagOnBoard(row, col);
+    } else {
+      this.gameService.openCellOnBoard(row, col);
     }
   }
 
-  // setFlagOnBoard(row: number, col: number) {
-  //   if (this.board.gameOver) return;
 
-  //   const cell = this.board.table[row][col];
-  //   if (cell.revelated) return;
+  activateFlagMode() {
+    this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
+  }
 
-  //   cell.flag = !cell.flag;
-  //   this.board.scoreBoard.flagSets += cell.flag ? 1 : -1;
-  // }
+
+  desactivateFlagMode() {
+    this.activeFlagMode = this.gameService.desactiveFlagMode(this.activeFlagMode);
+  }
 
 
   get table() {

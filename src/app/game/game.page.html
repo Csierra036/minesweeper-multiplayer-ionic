@@ -16,7 +16,14 @@
   </div>
 
   <div class="button-container">
-    <ion-button class="btn">Flag</ion-button>
-    <ion-button class="btn">Spade</ion-button>
+  <ion-button class="btn" (click)="activateFlagMode()">
+  <ion-icon slot="start" name="flag-outline"></ion-icon>
+  FLAG
+  </ion-button>
+
+<ion-button class="btn" (click)="desactivateFlagMode()">
+  <ion-icon slot="start" name="construct-outline"></ion-icon>
+    Spade
+</ion-button>
   </div>
 </ion-content>
