@@ -1,23 +1,24 @@
-<ion-content [fullscreen]="true">
-  
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">join-room-page</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
 
-  <form (ngSubmit)="JoinRoom()">
-    <ion-item>
-      <ion-label position="floating">IP</ion-label>
-      <ion-input [(ngModel)]="serverIp" name="IP" required></ion-input>
-    </ion-item>
+  <ion-title class="join-room-title">
+      Join Room
+  </ion-title>
 
-    <ion-item>
-      <ion-label position="floating">PORT</ion-label>
-      <ion-input [(ngModel)]="serverPort" name="PORT" required></ion-input>
-    </ion-item>
+  <div class="form-content">
+    <form (ngSubmit)="JoinRoom()">
+      <ion-item>
+        <ion-label position="floating">IP</ion-label>
+        <ion-input [(ngModel)]="serverIp" name="IP" required></ion-input>
+      </ion-item>
 
-    <ion-button expand="block" type="submit">Guardar</ion-button>
-  </form>
+      <ion-item>
+        <ion-label position="floating">PORT</ion-label>
+        <ion-input [(ngModel)]="serverPort" name="PORT" required></ion-input>
+      </ion-item>
 
+      <div class="save-button">
+        <ion-button expand="block" type="submit">Guardar</ion-button>
+      </div>
+    </form>
+  </div>
 </ion-content>
