@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonInput, IonItem, IonLabel, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonTitle, IonInput, IonItem, IonLabel, IonButton } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { GameService } from '../services/game.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { ToastService } from '../services/toast.service';
   templateUrl: './join-room-page.page.html',
   styleUrls: ['./join-room-page.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule,
+  imports: [IonContent, IonTitle, CommonModule,
     FormsModule, IonInput, IonItem, IonLabel, IonButton, RouterModule]
 })
 
