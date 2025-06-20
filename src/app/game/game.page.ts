@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonIcon, IonCard, IonTitle} from '@ionic/angular/standalone';
 import { Board } from './board';
 import { scoreBoard } from './scoreBoard';
 import { GameService } from '../services/game.service';
-
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton,  IonIcon]
+  imports: [IonContent, CommonModule, FormsModule, IonButton, IonIcon, IonCard, IonTitle]
 })
 
 

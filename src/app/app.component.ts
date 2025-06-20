@@ -7,7 +7,7 @@ import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet, GamePage],
+  imports: [IonApp, IonRouterOutlet],
   standalone: true
 })
 export class AppComponent {
