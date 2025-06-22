@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'main-connect-server',
     pathMatch: 'full',
   },
   {
@@ -22,5 +22,10 @@ export const routes: Routes = [
     path: 'join-room-page',
     loadComponent: () => import('./join-room-page/join-room-page.page').then( m => m.JoinRoomPagePage)
   },
+  {
+    path: 'main-connect-server',
+    loadComponent: () => import('./main-connect-server/main-connect-server.page').then( m => m.MainConnectServerPage)
+  },
+
 
 ];

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {IonContent, IonButton,IonText } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',

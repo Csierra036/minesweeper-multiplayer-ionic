@@ -2,19 +2,37 @@ import { Injectable } from '@angular/core';
 import { Board } from '../game/board';
 import { io, Socket } from 'socket.io-client';
 import { ToastService } from './toast.service';
+import { WebsocketService } from './websocket.service';
 @Injectable({
   providedIn: 'root'
 })
 
 export class GameService {
   private board!: Board;
-  private socket!: Socket;
-  constructor(private toastService: ToastService){}
+  
+  constructor(private readonly toastService: ToastService,
+              private readonly websocketService: WebsocketService){}
+
+  
+  connectToServer(serverIp: string, serverPort: string) {
+    this.websocketService.connectToServer(serverIp, serverPort);
+  }
 
 
-  //Configuration the board for select the difficulty
-  setBoard(board: Board) {
-    this.board = board;
+  sendCreatedBoard(boardGame: Board) {
+    this.websocketService.sendCreatedBoard(boardGame);
+  }
+
+
+  joinRoomCreated(serverIp: string, serverPort: string): boolean{
+    this.connectToServer(serverIp, serverPort);
+    const boardExist = this.websocketService.checkBoardExist();
+    
+    if(!boardExist){
+      this.toastService.createToast('Room has not been created', 'danger');
+      return false;
+    }
+    return true;
   }
 
 
@@ -59,7 +77,7 @@ export class GameService {
 
     if (cell.flag == 0){
       this.board.table[row][col].flag = 1;
-      this.sendMessage('flagChange', { row, col, flag: cell.flag });
+      // this.sendMessage('flagChange', { row, col, flag: cell.flag });
     }
     else{
       this.toastService.createToast('Ya hay una bandera en esta celda', 'warning');
@@ -89,44 +107,4 @@ export class GameService {
     }
     return flagMode;
   }
-
-
-  connectToServer(serverIp: string, serverPort: string) {
-    this.socket = io(`http://${serverIp}:${serverPort}`,{
-      transports: ['websocket'], // Fuerza WebSocket,
-      rejectUnauthorized: false
-    });
-    this.socket.on('mensaje', (data: string) => {
-      console.log('Mensaje del servidor:', data);
-      alert('Servidor dice: ' + data);
-    });
-  }
-
-
-  joinRoomCreated(serverIp: string, serverPort: string): boolean{
-    const isCreated = this.board !== undefined;
-    
-    if (isCreated) {
-      this.connectToServer(serverIp, serverPort);
-    }
-    return isCreated;
-  }
-  
-
-  sendMessage(event: string, data: any) {
-    this.socket.emit(event, data);
-  }
-
-
-  listen(event: string, callback: (data: any) => void) {
-    this.socket.on(event, callback);
-  }
-
-
-  disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
-  }
-
 }

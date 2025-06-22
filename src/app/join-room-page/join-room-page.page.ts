@@ -18,8 +18,7 @@ import { ToastService } from '../services/toast.service';
 
 
 export class JoinRoomPagePage implements OnInit {
-  serverIp: string = '';
-  serverPort: string = '';
+  codeRoom: string = '';
   constructor(private gameService: GameService, private router: Router, private toastService: ToastService) { }
 
   ngOnInit() {
@@ -28,8 +27,7 @@ export class JoinRoomPagePage implements OnInit {
 
   SaveInfo() {
     const serverData = {
-      serverIp: this.serverIp,
-      serverPort: this.serverPort
+      codeRoom: this.codeRoom
     };
 
     return serverData;
@@ -38,14 +36,6 @@ export class JoinRoomPagePage implements OnInit {
 
   JoinRoom() {
     const serverData = this.SaveInfo();
-    const serverCreated = this.gameService.joinRoomCreated(serverData.serverIp, serverData.serverPort);
-    
-    if(serverCreated){
-      this.router.navigate(['/game']);
-    }
-    else{
-      this.toastService.createToast('No se ha creado la sala', 'danger');
-    }
   }
 
 }

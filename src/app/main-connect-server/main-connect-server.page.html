@@ -1,14 +1,19 @@
 <ion-content>
 
   <ion-title class="join-room-title">
-      Join Room
+    Join Room
   </ion-title>
 
   <div class="form-content">
     <form (ngSubmit)="JoinRoom()">
       <ion-item>
         <ion-label position="floating">IP</ion-label>
-        <ion-input [(ngModel)]="codeRoom" name="Code room" required></ion-input>
+        <ion-input [(ngModel)]="serverIp" name="IP" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">PORT</ion-label>
+        <ion-input [(ngModel)]="serverPort" name="PORT" required></ion-input>
       </ion-item>
 
       <div class="save-button">

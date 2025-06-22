@@ -30,7 +30,7 @@ export class CreateRoomPagePage implements OnInit {
     this.board.setMinesRandom();
     this.board.calculateAdjacentMines(); // calcular números
     
-    this.gameService.setBoard(this.board);
+    this.gameService.sendCreatedBoard(this.board);
     this.router.navigate(['/join-room-page']);
   }
 }
