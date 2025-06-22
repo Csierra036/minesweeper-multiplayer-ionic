@@ -14,8 +14,18 @@ export class GameService {
               private readonly websocketService: WebsocketService){}
 
   
-  connectToServer(serverIp: string, serverPort: string) {
-    this.websocketService.connectToServer(serverIp, serverPort);
+  async connectToServer(serverIp: string, serverPort: string) {
+    try {
+      const statusConnection = await this.websocketService.connectToServer(serverIp, serverPort);
+      if (!statusConnection) {
+        this.toastService.createToast('No se pudo conectar al servidor', 'danger');
+        return false;
+      }
+      return true;
+    } catch (err: any) {
+      this.toastService.createToast('Error al conectar: ' + err.message, 'danger');
+      return false;
+    }
   }
 
 
