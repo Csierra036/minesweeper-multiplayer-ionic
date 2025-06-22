@@ -1,0 +1,44 @@
+<ion-content>
+  <div class="flex-storyboard-container">
+    
+    <div>
+      <ion-title>P1</ion-title>
+      <ion-card class="card-flex-container">
+        Mines:4
+        Flags:5
+        Opens:1
+      </ion-card>
+    </div>
+    <div>
+      <ion-title>P2</ion-title>
+      <ion-card class="card-flex-container">
+        Mines:4
+        Flags:5
+        Opens:1
+      </ion-card>
+    </div>
+  </div>
+
+  <div class="board">
+    <div *ngFor="let row of board.table; let i = index" class="row">
+      <div *ngFor="let cell of row; let j = index" class="cell" (click)="openCellOnBoard(i, j)">
+        <!-- Mostrar contenido según estado -->
+        <span *ngIf="cell.revelated">
+          {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
+        </span>
+        <span *ngIf="!cell.revelated && cell.flag">🚩</span>
+        <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <ion-button class="btn" (click)="activateFlagMode()" fill="clear">
+      <img src="assets/icon/flag_button_icon.png" alt="flag_icon_button">
+    </ion-button>
+
+    <ion-button class="btn" (click)="desactivateFlagMode() "fill="clear">
+      <img src="assets/icon/shovel_button_icon.png" alt="shovel_button_icon">
+    </ion-button>
+  </div>
+</ion-content>

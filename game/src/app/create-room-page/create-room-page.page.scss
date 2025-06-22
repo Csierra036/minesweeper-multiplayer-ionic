@@ -1,0 +1,25 @@
+.container-select-mode{
+  margin-top: 50px;
+  color: #fff;
+  text-shadow: 0 0 5px black,
+              0 0 5px black,
+              0 0 5px black,
+              0 0 5px black;
+  
+}
+
+.container-select-mode .select-mode{
+  text-align: center;
+  font-size: 45px;
+}
+
+.mode-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+ion-content {
+  --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
+}

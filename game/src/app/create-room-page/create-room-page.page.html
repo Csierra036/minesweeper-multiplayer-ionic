@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true">
+  <div class="container-select-mode">
+    <h1 class="select-mode">Select Mode</h1>
+  </div>
+  
+  <div class="mode-buttons">
+    <ion-button  routerLink="/create-room-page" fill="clear" (click)="setDifficulty(5, 3)">
+      <img src="assets/icon/5x5_icon.png" alt="5x5" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(8, 10)">
+      <img src="assets/icon/8x8_icon.png" alt="8x8" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(10, 20)">
+      <img src="assets/icon/10x10_icon.png" alt="10x10" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear">
+      <img src="assets/icon/custom_icon.png" alt="custom" width="200">
+    </ion-button>
+  </div>
+</ion-content>
