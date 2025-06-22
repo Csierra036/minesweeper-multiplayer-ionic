@@ -21,12 +21,14 @@ export class GamePage implements OnInit {
   activeFlagMode: boolean = false;
   playerRound: number = 1;
   constructor(private gameService: GameService) {
-    this.board = this.gameService.getBoard();
   }
 
-
-  ngOnInit() {}
-
+  async ngOnInit() {
+    const board = await this.gameService.getBoard();
+    if (board) {
+      this.board = board;
+    }
+  }
 
   openCellOnBoard(row: number, col: number) {
     if (this.activeFlagMode) {
@@ -47,8 +49,9 @@ export class GamePage implements OnInit {
   }
 
 
-  get table() {
-    return this.board.table;
+  async getTable() {
+    const board = await this.gameService.getBoard();
+    return board ? board.table : null;
   }
 
 }

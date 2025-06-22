@@ -13,17 +13,29 @@ const server = new Server(httpsServer, {
 
 server.on("connection", (socket) => {
   console.log("Cliente conectado:", socket.id);
-  socket.emit("mensaje", "Bienvenido!");
-  socket.on("mensaje_cliente", (data) => {
-    console.log("Recibido:", data);
+  
+  socket.on("saveCreateBoard", (board, callback) => {
+    console.log("Tablero recibido:", board);
+    boardTable = board;
+    console.log("Tablero guardado en el servidor:", boardTable);
+    callback(true);
+  });
+
+  socket.on("getBoard", (callback) => {
+    if (boardTable) {
+      console.log("Enviando tablero al cliente:", boardTable);
+      callback(boardTable);
+    } else {
+      console.log("No hay tablero disponible");
+      callback(null);
+    }
   });
 });
+
 
 httpsServer.listen(8181, "0.0.0.0", () => {
   console.log("Servidor HTTPS Socket.io escuchando en puerto 8181");
 });
-
-
 
 
 // import { Server } from "socket.io";

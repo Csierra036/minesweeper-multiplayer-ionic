@@ -20,7 +20,7 @@
   </div>
 
   <div class="board">
-    <div *ngFor="let row of table; let i = index" class="row">
+    <div *ngFor="let row of board.table; let i = index" class="row">
       <div *ngFor="let cell of row; let j = index" class="cell" (click)="openCellOnBoard(i, j)">
         <!-- Mostrar contenido según estado -->
         <span *ngIf="cell.revelated">

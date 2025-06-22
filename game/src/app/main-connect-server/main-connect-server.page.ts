@@ -33,16 +33,15 @@ export class MainConnectServerPage implements OnInit {
 
 
   async JoinRoom() {
-  if (!this.serverIp || !this.serverPort) {
-    this.toastService.createToast('Por favor completa IP y puerto', 'warning');
-    return;
+    if (!this.serverIp || !this.serverPort) {
+      this.toastService.createToast('Por favor completa IP y puerto', 'warning');
+      return;
+    }
+    this.toastService.createToast(`Conectando a ${this.serverIp}:${this.serverPort}`, 'warning');
+    const connected = await this.gameService.connectToServer(this.serverIp, this.serverPort);
+    
+    if(connected){
+      this.router.navigate(['/home']);
+    }
   }
-  this.toastService.createToast(`Conectando a ${this.serverIp}:${this.serverPort}`, 'info');
-  const connected = await this.gameService.connectToServer(this.serverIp, this.serverPort);
-  
-  if(connected){
-    this.router.navigate(['/home']);
-  }
-}
-
 }

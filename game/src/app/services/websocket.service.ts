@@ -27,19 +27,40 @@ export class WebsocketService {
     });
   }
 
-  sendCreatedBoard(boardGame: Board){
-    this.socket.emit('saveCreateBoard', boardGame);
-  }
 
+  sendCreatedBoard(boardGame: Board): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.socket.emit('saveCreateBoard', boardGame, (ackResponse: boolean) => {
+        if (ackResponse === true) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
 
-  checkBoardExist(){
-    let response = false;
-    
-    this.socket.emit('checkBoardExist');
-    this.socket.on('boardExists', (boartExist: boolean) => {
-      response = boartExist;
+      // Seguridad por si no hay respuesta del servidor
+      setTimeout(() => {
+        resolve(false); // ✅ nunca uses reject con un booleano
+      }, 5000);
     });
-
-    return response;
   }
+
+
+  getBoard(): Promise<Board | null> {
+    return new Promise((resolve) => {
+      this.socket.emit('getBoard', (board: Board | null) => {
+        if (board) {
+          resolve(board);
+        } else {
+          resolve(null);
+        }
+      });
+
+      // Seguridad por si no hay respuesta del servidor
+      setTimeout(() => {
+        resolve(null); // ✅ nunca uses reject con un booleano
+      }, 5000);
+    });
+  }
+
 }

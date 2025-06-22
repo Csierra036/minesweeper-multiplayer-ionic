@@ -24,13 +24,14 @@ export class CreateRoomPagePage implements OnInit {
   ngOnInit() {
   }
 
-  setDifficulty(size: number, mines: number) {
+  async setDifficulty(size: number, mines: number) {
     this.board.table = []; // reinicia el tablero
     this.board.setDifficulty(size, mines);
     this.board.setMinesRandom();
     this.board.calculateAdjacentMines(); // calcular números
     
-    this.gameService.sendCreatedBoard(this.board);
-    this.router.navigate(['/join-room-page']);
-  }
+    const createdTable = await this.gameService.sendCreatedBoard(this.board);
+    if(createdTable)
+      this.router.navigate(['/game']);
+    }
 }

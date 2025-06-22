@@ -8,10 +8,12 @@ import { WebsocketService } from './websocket.service';
 })
 
 export class GameService {
-  private board!: Board;
+  private board: Board;
   
   constructor(private readonly toastService: ToastService,
-              private readonly websocketService: WebsocketService){}
+              private readonly websocketService: WebsocketService){
+    this.board = new Board();
+  }
 
   
   async connectToServer(serverIp: string, serverPort: string): Promise<boolean> {
@@ -26,33 +28,49 @@ export class GameService {
       this.toastService.createToast(`Conectado a ${serverIp}:${serverPort}`, 'success');
       return true;
     } 
-    
+
     this.toastService.createToast('Error al conectar al servidor', 'danger');
     return false;
     
   }
 
 
-  sendCreatedBoard(boardGame: Board) {
-    this.websocketService.sendCreatedBoard(boardGame);
-  }
-
-
-  joinRoomCreated(serverIp: string, serverPort: string): boolean{
-    this.connectToServer(serverIp, serverPort);
-    const boardExist = this.websocketService.checkBoardExist();
-    
-    if(!boardExist){
-      this.toastService.createToast('Room has not been created', 'danger');
-      return false;
+  async sendCreatedBoard(boardGame: Board) : Promise<boolean>{
+    let success = false;
+    try{
+      success = await this.websocketService.sendCreatedBoard(boardGame);
+      console.log('Board sent successfully:', success);
+    } catch (error) {
+      success = false;
     }
-    return true;
+
+    if (success) {
+      this.toastService.createToast(`Room created`, 'success');
+      return true;
+    } 
+
+    this.toastService.createToast('Error al conectar al servidor', 'danger');
+    return false;
   }
 
 
   //Call the changes of the board
-  getBoard(): Board {
-    return this.board;
+  async getBoard(){
+    try{
+      const boardResult = await this.websocketService.getBoard();
+      if (boardResult !== null) {
+        this.board = boardResult;
+        return this.board;
+      }
+      else {
+        this.toastService.createToast('No hay tablero disponible', 'warning');
+        return null;
+      }
+
+    } catch (error) {
+      this.toastService.createToast('Error con el servidor', 'error');
+      return null;
+    }
   }
 
 
