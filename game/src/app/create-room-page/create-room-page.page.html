@@ -4,8 +4,20 @@
   </div>
   
   <div class="mode-buttons">
-    <ion-button class="big-button" color="warning" (click)="setDifficulty(5, 3)">5x5</ion-button>
-    <ion-button class="big-button" color="danger" (click)="setDifficulty(8, 10)">8x8</ion-button>
-    <ion-button class="big-button" color="success" (click)="setDifficulty(10, 20)">10x10</ion-button>
+    <ion-button  routerLink="/create-room-page" fill="clear" (click)="setDifficulty(5, 3)">
+      <img src="assets/icon/5x5_icon.png" alt="5x5" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(8, 10)">
+      <img src="assets/icon/8x8_icon.png" alt="8x8" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(10, 20)">
+      <img src="assets/icon/10x10_icon.png" alt="10x10" width="200">
+    </ion-button>
+
+    <ion-button  routerLink="/join-room-page" fill="clear">
+      <img src="assets/icon/custom_icon.png" alt="custom" width="200">
+    </ion-button>
   </div>
 </ion-content>

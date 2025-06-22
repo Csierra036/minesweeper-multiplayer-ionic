@@ -1,5 +1,5 @@
 .container-select-mode{
-  margin-top: 100px;
+  margin-top: 50px;
   color: #fff;
   text-shadow: 0 0 5px black,
               0 0 5px black,
@@ -10,28 +10,14 @@
 
 .container-select-mode .select-mode{
   text-align: center;
-  font-size: 50px;
+  font-size: 45px;
 }
 
 .mode-buttons {
   display: flex;
   flex-direction: column;
-  gap: 30px;
   align-items: center;
-  margin-top: 100px;
-}
-
-.big-button {
-  --padding-top: 30px;
-  --padding-bottom: 30px;
-  --padding-start: 50px;
-  --padding-end: 50px;
-  font-size: 20px;
-  border-radius: 12px;
-  text-shadow: 0 0 10px black,
-              0 0 10px black,
-              0 0 10px black,
-              0 0 10px black;
+  margin-top: 50px;
 }
 
 ion-content {
