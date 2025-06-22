@@ -3,16 +3,17 @@ ion-content {
 }
 
 
-.join-room-title{
+.connect-to-server-title{
   text-align: center;
   color: white;
-  font-size: 35px;
+  font-size: 17px;
   text-shadow: 0 0 5px black,
               0 0 5px black,
               0 0 5px black,
               0 0 5px black;
   margin-top: 100px;
   padding-block-end: 100px;
+  display: flex;
 }
 
 

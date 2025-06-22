@@ -5,37 +5,27 @@ import { Board } from '../game/board';
   providedIn: 'root'
 })
 export class WebsocketService {
-
   private socket!: Socket;
 
   constructor() {}
 
   connectToServer(serverIp: string, serverPort: string): Promise<boolean>{
     return new Promise((resolve, reject) => {
-      const url = `http://${serverIp}:${serverPort}`;
-
-      this.socket = io(url, {
+      this.socket = io(`http://${serverIp}:${serverPort}`, {
         transports: ['websocket'],
         rejectUnauthorized: false
       });
 
-      this.socket.on('connect', () => {
-        console.log('✅ Conectado al servidor:', this.socket.id);
-        this.socket.emit('tryConnectServer');
-      });
+    this.socket.on('connect', () => {
+      console.log('Socket conectado con ID:', this.socket.id);
+      resolve(true);
+    });
 
-      this.socket.on('message', (response: boolean) => {
-        console.log('📨 Servidor respondió:', response);
-        resolve(response); // Aquí confirmamos conexión
-      });
-
-      this.socket.on('connect_error', (err) => {
-        console.error('❌ Error al conectar al servidor:', err.message);
-        reject(err);
-      });
+    setTimeout(() => {
+        reject(false);
+      }, 5000); //seconds
     });
   }
-
 
   sendCreatedBoard(boardGame: Board){
     this.socket.emit('saveCreateBoard', boardGame);

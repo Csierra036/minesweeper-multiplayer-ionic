@@ -37,11 +37,10 @@ export class MainConnectServerPage implements OnInit {
     this.toastService.createToast('Por favor completa IP y puerto', 'warning');
     return;
   }
-
   this.toastService.createToast(`Conectando a ${this.serverIp}:${this.serverPort}`, 'info');
-  
   const connected = await this.gameService.connectToServer(this.serverIp, this.serverPort);
-  if (connected) {
+  
+  if(connected){
     this.router.navigate(['/home']);
   }
 }
