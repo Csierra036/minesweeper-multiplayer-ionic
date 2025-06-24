@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonButton } from '@ionic/angular/standalone';
-import { Board } from '../game/board';
+import { Board } from '../game/board-pieces/board';
 import { GameService } from '../services/game.service';
 import { Router } from '@angular/router';
 @Component({
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonButton]
 })
+
 export class CreateRoomPagePage implements OnInit {
   size: number = 0;
   mines: number = 0;

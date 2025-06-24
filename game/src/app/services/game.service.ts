@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Board } from '../game/board';
-import { io, Socket } from 'socket.io-client';
+import { Board } from '../game/board-pieces/board';
 import { ToastService } from './toast.service';
 import { WebsocketService } from './websocket.service';
 @Injectable({
@@ -9,7 +8,6 @@ import { WebsocketService } from './websocket.service';
 
 export class GameService {
   private board: Board = new Board();
-  
   constructor(private readonly toastService: ToastService,
               private readonly websocketService: WebsocketService){
     this.board = new Board();

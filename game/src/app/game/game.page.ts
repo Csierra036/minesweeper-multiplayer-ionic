@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonButton, IonCard, IonTitle} from '@ionic/angular/standalone';
-import { Board } from './board';
+import { Board } from './board-pieces/board';
 import { scoreBoard } from './scoreBoard';
 import { GameService } from '../services/game.service';
 @Component({
@@ -19,7 +19,7 @@ export class GamePage implements OnInit {
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
-  playerRound: number = 1;
+  playerTurn: number = 1;
   constructor(private gameService: GameService) {
   }
 
@@ -51,9 +51,13 @@ export class GamePage implements OnInit {
   }
 
 
-  async getTable() {
-    const board = await this.gameService.getBoard();
-    return board ? board.table : null;
-  }
+  // async getTable() {
+  //   const board = await this.gameService.getBoard();
+  //   if (!board) {
+  //     console.error('Error al obtener el tablero');
+  //     return;
+  //   }
+  //   this.board = board;
+  // }
 
 }

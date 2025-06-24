@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { Board } from '../game/board';
+import { Board } from '../game/board-pieces/board';
 @Injectable({
   providedIn: 'root'
 })
