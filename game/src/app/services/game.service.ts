@@ -8,7 +8,7 @@ import { WebsocketService } from './websocket.service';
 })
 
 export class GameService {
-  private board: Board;
+  private board: Board = new Board();
   
   constructor(private readonly toastService: ToastService,
               private readonly websocketService: WebsocketService){
@@ -59,7 +59,10 @@ export class GameService {
     try{
       const boardResult = await this.websocketService.getBoard();
       if (boardResult !== null) {
-        this.board = boardResult;
+        this.board.gameOver = boardResult.gameOver;
+        this.board.table = boardResult.table;
+        this.board.size = boardResult.size;
+        this.board.mines = boardResult.mines;
         return this.board;
       }
       else {

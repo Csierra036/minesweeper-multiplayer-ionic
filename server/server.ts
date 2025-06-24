@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
 import { createServer } from "http";
-
+import { Board } from "./board-pieces/board";
 const httpsServer = createServer({});
-let boardTable: any = undefined;
+let boardTable: Board = new Board();
 
 const server = new Server(httpsServer, {
   cors: {
@@ -25,6 +25,23 @@ server.on("connection", (socket) => {
     if (boardTable) {
       console.log("Enviando tablero al cliente:", boardTable);
       callback(boardTable);
+
+      
+    console.log("=== MINAS ADYACENTES (DEBUG) ===");
+    for (let i = 0; i < boardTable.size; i++) {
+        let rowString = "";
+        for (let j = 0; j < boardTable.size; j++) {
+            const cell = boardTable.table[i][j];
+            if (cell.mine) {
+                rowString += " * "; // Mina (aunque no esté revelada)
+            } else {
+                rowString += ` ${cell.adjacentMines} `; // Número de minas adyacentes
+            }
+        }
+        console.log(rowString);
+    }
+    console.log("===============================");
+
     } else {
       console.log("No hay tablero disponible");
       callback(null);

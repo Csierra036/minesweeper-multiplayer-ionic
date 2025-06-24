@@ -25,9 +25,11 @@ export class GamePage implements OnInit {
 
   async ngOnInit() {
     const board = await this.gameService.getBoard();
-    if (board) {
-      this.board = board;
+    if (!board) {
+      console.error('Error al obtener el tablero');
+      return;
     }
+    this.board = board;
   }
 
   openCellOnBoard(row: number, col: number) {
