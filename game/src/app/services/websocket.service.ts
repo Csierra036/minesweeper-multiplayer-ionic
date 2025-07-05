@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Board } from '../game/board-pieces/board';
+import { StatusGameDto } from '../game/status_game/stateGame.dto';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -63,4 +65,23 @@ export class WebsocketService {
     });
   }
 
+
+  sendTurnGame(statusGame: StatusGameDto): Promise<boolean> {
+  return new Promise((resolve) => {
+    this.socket.emit('followGameStatus', statusGame, (ack: boolean) => {
+      resolve(ack === true);
+    });
+
+    setTimeout(() => {
+      resolve(false);
+    }, 5000);
+  });
+  }
+
+
+  listenGameStatusUpdate(callback: (statusGame: StatusGameDto) => void): void {
+    this.socket.on('statusGame', (statusGame: StatusGameDto) => {
+      callback(statusGame);
+    });
+  }
 }

@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { Board } from '../game/board-pieces/board';
 import { ToastService } from './toast.service';
 import { WebsocketService } from './websocket.service';
+import { StatusGameDto } from '../game/status_game/stateGame.dto';
 @Injectable({
   providedIn: 'root'
 })
 
 export class GameService {
-  private board: Board = new Board();
   constructor(private readonly toastService: ToastService,
               private readonly websocketService: WebsocketService){
-    this.board = new Board();
   }
-
   
+
   async connectToServer(serverIp: string, serverPort: string): Promise<boolean> {
     let success = false;
     try {
@@ -53,15 +52,15 @@ export class GameService {
 
 
   //Call the changes of the board
-  async getBoard(){
+  async getBoard(board: Board){
     try{
       const boardResult = await this.websocketService.getBoard();
       if (boardResult !== null) {
-        this.board.gameOver = boardResult.gameOver;
-        this.board.table = boardResult.table;
-        this.board.size = boardResult.size;
-        this.board.mines = boardResult.mines;
-        return this.board;
+        board.gameOver = boardResult.gameOver;
+        board.table = boardResult.table;
+        board.size = boardResult.size;
+        board.mines = boardResult.mines;
+        return board;
       }
       else {
         this.toastService.createToast('No hay tablero disponible', 'warning');
@@ -87,30 +86,32 @@ export class GameService {
   }
 
 
-  openCellOnBoard(row: number, col: number) {
-    if (this.board.gameOver) return;
+  openCellOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
+    if (gameStatus.boardGame.gameOver) return;
 
-    const cell = this.board.table[row][col];
+    const cell = gameStatus.boardGame.table[row][col];
     if (cell.revelated || cell.flag) return;
 
-    this.board.openCell(row, col);
-
+    gameStatus.boardGame.openCell(row, col);
+    gameStatus.playerTurn = this.rotateRound(gameStatus.playerTurn);
+    this.websocketService.sendTurnGame(gameStatus)
     // Opcional: si cae en mina, marcar el juego como terminado
     if (cell.mine) {
-      this.board.gameOver = true;
+      gameStatus.boardGame.gameOver = true;
       alert('💥 ¡Perdiste!');
     }
   }
 
 
-  setFlagOnBoard(row: number, col: number) {
-    const cell = this.board.table[row][col];
-    if (this.board.gameOver) return;
+  setFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
+    const cell = gameStatus.boardGame.table[row][col];
+    if (gameStatus.boardGame.gameOver) return;
     if (cell.revelated) return;
 
     if (cell.flag == 0){
-      this.board.table[row][col].flag = 1;
-      // this.sendMessage('flagChange', { row, col, flag: cell.flag });
+      gameStatus.boardGame.table[row][col].flag = 1;
+      gameStatus.playerTurn = this.rotateRound(gameStatus.playerTurn);
+      this.websocketService.sendTurnGame(gameStatus)
     }
     else{
       this.toastService.createToast('Ya hay una bandera en esta celda', 'warning');
@@ -139,5 +140,10 @@ export class GameService {
       this.toastService.createToast('Modo bandera desactivado', 'success');
     }
     return flagMode;
+  }
+
+
+  onGameStatusUpdate(callback: (status: StatusGameDto) => void): void {
+    this.websocketService.listenGameStatusUpdate(callback);
   }
 }

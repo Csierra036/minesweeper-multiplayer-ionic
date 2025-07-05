@@ -5,6 +5,8 @@ import { IonContent, IonButton, IonCard, IonTitle} from '@ionic/angular/standalo
 import { Board } from './board-pieces/board';
 import { scoreBoard } from './scoreBoard';
 import { GameService } from '../services/game.service';
+import { StatusGameDto } from './status_game/stateGame.dto';
+
 @Component({
   selector: 'app-game',
   templateUrl: './game.page.html',
@@ -15,28 +17,37 @@ import { GameService } from '../services/game.service';
 
 
 export class GamePage implements OnInit {
-  board: Board = new Board();
+  statusGame: StatusGameDto = new StatusGameDto();
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   playerTurn: number = 1;
+
   constructor(private gameService: GameService) {
+    this.playerOneStats.turn = true;
   }
 
+
   async ngOnInit() {
-    const board = await this.gameService.getBoard();
+    const board = await this.gameService.getBoard(this.statusGame.boardGame);
     if (!board) {
       console.error('Error al obtener el tablero');
       return;
     }
-    this.board = board;
+    this.statusGame.boardGame = board;
+
+    this.gameService.onGameStatusUpdate((status) => {
+      this.statusGame.boardGame = status.boardGame;
+      this.statusGame.playerTurn = status.playerTurn;
+    });
   }
+
 
   openCellOnBoard(row: number, col: number) {
     if (this.activeFlagMode) {
-      this.gameService.setFlagOnBoard(row, col);
+      this.gameService.setFlagOnBoard(row, col, this.statusGame);
     } else {
-      this.gameService.openCellOnBoard(row, col);
+      this.gameService.openCellOnBoard(row, col, this.statusGame);
     }
   }
 
@@ -49,15 +60,5 @@ export class GamePage implements OnInit {
   desactivateFlagMode() {
     this.activeFlagMode = this.gameService.desactiveFlagMode(this.activeFlagMode);
   }
-
-
-  // async getTable() {
-  //   const board = await this.gameService.getBoard();
-  //   if (!board) {
-  //     console.error('Error al obtener el tablero');
-  //     return;
-  //   }
-  //   this.board = board;
-  // }
 
 }
