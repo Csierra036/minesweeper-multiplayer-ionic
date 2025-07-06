@@ -1,5 +1,10 @@
-ion-content {
+.background {
   --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
+}
+
+.custom-modal-background {
+  --background: white; /* fondo blanco para el modal */
+  --backdrop-opacity: 0.0; /* si quieres quitar el fondo oscuro de fondo */
 }
 
 .flex-storyboard-container{
@@ -62,4 +67,9 @@ ion-content {
 .score-board{
   display: flex;
   gap: 10px;
+}
+
+.end-title{
+  text-align: center;
+  font-size: 15px;
 }

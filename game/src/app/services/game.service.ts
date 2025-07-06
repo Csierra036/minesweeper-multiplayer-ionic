@@ -93,12 +93,13 @@ export class GameService {
 
     gameStatus.boardGame.openCell(row, col);
     gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
-    this.websocketService.sendTurnGame(gameStatus)
-    // Opcional: si cae en mina, marcar el juego como terminado
+    
     if (cell.mine) {
       gameStatus.boardGame.gameOver = true;
       alert('💥 ¡Perdiste!');
     }
+
+    this.websocketService.sendTurnGame(gameStatus)
   }
 
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle} from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonCard, IonTitle, IonHeader, IonToolbar, IonModal} from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -14,7 +14,7 @@ import { ToastService } from '../services/toast.service';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton, IonCard, IonTitle]
+  imports: [IonContent, CommonModule, FormsModule, IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal]
 })
 
 
@@ -24,7 +24,7 @@ export class GamePage implements OnInit {
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   player: number = 0;
-
+  finishModal = true;
   constructor(
     private readonly gameService: GameService,
     private readonly route: ActivatedRoute,
@@ -51,6 +51,10 @@ export class GamePage implements OnInit {
       let board: Board = new Board()
       this.statusGame.boardGame = board.DeserializeJson(status.boardGame)
       this.statusGame.turnGame = status.turnGame;
+
+      if(this.statusGame.boardGame.gameOver === true){
+
+      }
       this.toastService.createToast(`Turn of the player ${status.turnGame}`,'secondary');
     });
   }
@@ -85,6 +89,17 @@ export class GamePage implements OnInit {
       return;
     }
     this.activeFlagMode = this.gameService.desactiveFlagMode(this.activeFlagMode);
+  }
+
+
+  restartGame() {
+    this.finishModal = false;
+    this.toastService.createToast("Partida reiniciada", 'success');
+  }
+
+  
+  exitGame() {
+    this.finishModal = false;
   }
 
 }

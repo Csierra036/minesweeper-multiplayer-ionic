@@ -1,4 +1,5 @@
-<ion-content>
+
+<ion-content class="background">
   <div class="flex-storyboard-container">
     
     <div>
@@ -42,3 +43,23 @@
     </ion-button>
   </div>
 </ion-content>
+
+
+<div class="custom-modal-background">
+  <ion-modal [isOpen]="finishModal" (didDismiss)="finishModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title class="end-title">¡Fin del juego!</ion-title>
+        </ion-toolbar>
+      </ion-header>
+  
+      <ion-content class="ion-padding">
+        <p>¿What do you want?</p>
+  
+        <ion-button expand="block" color="success" (click)="restartGame()">Restart Game</ion-button>
+        <ion-button expand="block" color="danger" (click)="exitGame()">Exit</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</div>
