@@ -4,7 +4,7 @@ import { Board } from "./board-pieces/board";
 import { StatusGameDto } from "./status_game/stateGame.dto";
 const httpsServer = createServer({});
 let boardTable: Board = new Board();
-let statusGame: StatusGameDto = new StatusGameDto();
+let gameStatus: StatusGameDto = new StatusGameDto();
 
 
 const server = new Server(httpsServer, {
@@ -38,10 +38,11 @@ server.on("connection", (socket) => {
   });
 
 
-  socket.on("followGameStatus", (statusGame, callback) =>{
-    if (statusGame) {
+  socket.on("followGameStatus", (status, callback) =>{
+    if (status) {
+      gameStatus = status;
       console.log("Enviado estado de juego a clientes:", boardTable);
-      server.emit("statusGame", statusGame);
+      server.emit("statusGame", gameStatus);
 
     } else {
       console.log("No hay tablero disponible");

@@ -103,17 +103,12 @@ export class Board{
         }
     }
 
-    // reveal(row: number, col: number) {
-    //     if (this.gameOver) return;
-
-    //     const cell = this.board.table[row][col];
-    //     this.board.revealCell(row, col);
-
-    //     if (cell.mine) {
-    //         this.gameOver = true;
-    //         alert('💥 ¡Perdiste! Tocaste una mina.');
-    //         // Opcional: mostrar todas las minas
-    //         this.revealAllMines();
-    //     }
-    //     }
+    DeserializeJson(data: any): Board {
+    const board = new Board();
+    board.gameOver = data.gameOver;
+    board.size = data.size;
+    board.mines = data.mines;
+    board.table = data.table;
+    return board;
+    }
 }

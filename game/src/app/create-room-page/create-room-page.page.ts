@@ -33,6 +33,6 @@ export class CreateRoomPagePage implements OnInit {
     
     const createdTable = await this.gameService.sendCreatedBoard(this.board);
     if(createdTable)
-      this.router.navigate(['/game']);
+      this.router.navigate(['/game'],{queryParams: { turn: 1 }});
     }
 }
