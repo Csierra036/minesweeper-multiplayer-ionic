@@ -88,12 +88,11 @@ export class GameService {
 
   openCellOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
     if (gameStatus.boardGame.gameOver) return;
-
     const cell = gameStatus.boardGame.table[row][col];
     if (cell.revelated || cell.flag) return;
 
     gameStatus.boardGame.openCell(row, col);
-    gameStatus.playerTurn = this.rotateRound(gameStatus.playerTurn);
+    gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
     this.websocketService.sendTurnGame(gameStatus)
     // Opcional: si cae en mina, marcar el juego como terminado
     if (cell.mine) {
@@ -110,7 +109,7 @@ export class GameService {
 
     if (cell.flag == 0){
       gameStatus.boardGame.table[row][col].flag = 1;
-      gameStatus.playerTurn = this.rotateRound(gameStatus.playerTurn);
+      gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
       this.websocketService.sendTurnGame(gameStatus)
     }
     else{

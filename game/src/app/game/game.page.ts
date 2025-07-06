@@ -7,6 +7,7 @@ import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
 import { ActivatedRoute } from '@angular/router';
 import { Board } from './board-pieces/board';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-game',
@@ -24,8 +25,12 @@ export class GamePage implements OnInit {
   activeFlagMode: boolean = false;
   player: number = 0;
 
-  constructor(private gameService: GameService, private route: ActivatedRoute) {
-    this.playerOneStats.turn = true;
+  constructor(
+    private readonly gameService: GameService,
+    private readonly route: ActivatedRoute,
+    private readonly toastService: ToastService
+  ) {
+      this.playerOneStats.turn = true;
   }
 
 
@@ -45,12 +50,18 @@ export class GamePage implements OnInit {
       console.log(status)
       let board: Board = new Board()
       this.statusGame.boardGame = board.DeserializeJson(status.boardGame)
-      this.statusGame.playerTurn = status.playerTurn;
+      this.statusGame.turnGame = status.turnGame;
+      this.toastService.createToast(`Turn of the player ${status.turnGame}`,'secondary');
     });
   }
 
 
   openCellOnBoard(row: number, col: number) {
+    if(this.statusGame.turnGame !== this.player){
+      this.toastService.createToast("Is not your turn", 'warning');
+      return;
+    }
+
     if (this.activeFlagMode) {
       this.gameService.setFlagOnBoard(row, col, this.statusGame);
     } else {
@@ -60,11 +71,19 @@ export class GamePage implements OnInit {
 
 
   activateFlagMode() {
+    if(this.statusGame.turnGame !== this.player){
+      this.toastService.createToast("Is not your turn", 'warning');
+      return;
+    }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
 
 
   desactivateFlagMode() {
+    if(this.statusGame.turnGame !== this.player){
+      this.toastService.createToast("Is not your turn", 'warning');
+      return;
+    }
     this.activeFlagMode = this.gameService.desactiveFlagMode(this.activeFlagMode);
   }
 
