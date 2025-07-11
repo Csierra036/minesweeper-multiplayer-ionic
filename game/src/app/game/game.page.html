@@ -1,29 +1,34 @@
-
 <ion-content class="background">
+  <!-- Contenedor de los marcadores de ambos jugadores -->
   <div class="flex-storyboard-container">
-    
     <div>
       <ion-title>P1</ion-title>
       <ion-card class="card-flex-container">
-        Mines:4
-        Flags:5
-        Opens:1
+        Cells: {{ playerOneStats.minesOpen }} <br />
+        Flags: {{ playerOneStats.flagSets }}
       </ion-card>
     </div>
     <div>
       <ion-title>P2</ion-title>
       <ion-card class="card-flex-container">
-        Mines:4
-        Flags:5
-        Opens:1
+        Cells: {{ playerTwoStats.minesOpen }} <br />
+        Flags: {{ playerTwoStats.flagSets }}
       </ion-card>
     </div>
   </div>
 
+  <!-- Renderizado del tablero de juego -->
   <div class="board">
-    <div *ngFor="let row of statusGame.boardGame.table; let i = index" class="row">
-      <div *ngFor="let cell of row; let j = index" class="cell" (click)="openCellOnBoard(i, j)">
-        <!-- Mostrar contenido según estado -->
+    <div
+      *ngFor="let row of statusGame.boardGame.table; let i = index"
+      class="row"
+    >
+      <div
+        *ngFor="let cell of row; let j = index"
+        class="cell"
+        (click)="openCellOnBoard(i, j)"
+      >
+        <!-- Mostrar contenido según estado de la celda -->
         <span *ngIf="cell.revelated">
           {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
         </span>
@@ -33,18 +38,18 @@
     </div>
   </div>
 
+  <!-- Botones para activar/desactivar modo bandera -->
   <div class="button-container">
     <ion-button class="btn" (click)="activateFlagMode()" fill="clear">
-      <img src="assets/icon/flag_button_icon.png" alt="flag_icon_button">
+      <img src="assets/icon/flag_button_icon.png" alt="flag_icon_button" />
     </ion-button>
-
-    <ion-button class="btn" (click)="desactivateFlagMode() "fill="clear">
-      <img src="assets/icon/shovel_button_icon.png" alt="shovel_button_icon">
+    <ion-button class="btn" (click)="desactivateFlagMode()" fill="clear">
+      <img src="assets/icon/shovel_button_icon.png" alt="shovel_button_icon" />
     </ion-button>
   </div>
 </ion-content>
 
-
+<!-- Modal personalizado para el fin del juego -->
 <div class="custom-modal-background">
   <ion-modal [isOpen]="finishModal" (didDismiss)="finishModal = false">
     <ng-template>
@@ -53,12 +58,14 @@
           <ion-title class="end-title">¡Fin del juego!</ion-title>
         </ion-toolbar>
       </ion-header>
-  
       <ion-content class="ion-padding">
         <p>¿What do you want?</p>
-  
-        <ion-button expand="block" color="success" (click)="restartGame()">Restart Game</ion-button>
-        <ion-button expand="block" color="danger" (click)="exitGame()">Exit</ion-button>
+        <ion-button expand="block" color="success" (click)="restartGame()">
+          Restart Game
+        </ion-button>
+        <ion-button expand="block" color="danger" (click)="exitGame()">
+          Exit
+        </ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>

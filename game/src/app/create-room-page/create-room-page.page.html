@@ -1,23 +1,41 @@
 <ion-content [fullscreen]="true">
+  <!-- Contenedor del título de selección de modo -->
   <div class="container-select-mode">
     <h1 class="select-mode">Select Mode</h1>
   </div>
-  
+
+  <!-- Botones para seleccionar el modo de juego y dificultad -->
   <div class="mode-buttons">
-    <ion-button  routerLink="/create-room-page" fill="clear" (click)="setDifficulty(5, 3)">
-      <img src="assets/icon/5x5_icon.png" alt="5x5" width="200">
+    <!-- Botón para tablero 5x5, crea la sala y permanece en la misma página -->
+    <ion-button
+      routerLink="/create-room-page"
+      fill="clear"
+      (click)="setDifficulty(5, 3)"
+    >
+      <img src="assets/icon/5x5_icon.png" alt="5x5" width="200" />
     </ion-button>
 
-    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(8, 10)">
-      <img src="assets/icon/8x8_icon.png" alt="8x8" width="200">
+    <!-- Botón para tablero 8x8, crea la sala y navega a la página de unirse -->
+    <ion-button
+      routerLink="/join-room-page"
+      fill="clear"
+      (click)="setDifficulty(8, 10)"
+    >
+      <img src="assets/icon/8x8_icon.png" alt="8x8" width="200" />
     </ion-button>
 
-    <ion-button  routerLink="/join-room-page" fill="clear" (click)="setDifficulty(10, 20)">
-      <img src="assets/icon/10x10_icon.png" alt="10x10" width="200">
+    <!-- Botón para tablero 10x10, crea la sala y navega a la página de unirse -->
+    <ion-button
+      routerLink="/join-room-page"
+      fill="clear"
+      (click)="setDifficulty(10, 20)"
+    >
+      <img src="assets/icon/10x10_icon.png" alt="10x10" width="200" />
     </ion-button>
 
-    <ion-button  routerLink="/join-room-page" fill="clear">
-      <img src="assets/icon/custom_icon.png" alt="custom" width="200">
+    <!-- Botón para modo personalizado, solo navega a la página de unirse -->
+    <ion-button routerLink="/join-room-page" fill="clear">
+      <img src="assets/icon/custom_icon.png" alt="custom" width="200" />
     </ion-button>
   </div>
 </ion-content>

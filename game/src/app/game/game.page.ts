@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle, IonHeader, IonToolbar, IonModal} from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonButton,
+  IonCard,
+  IonTitle,
+  IonHeader,
+  IonToolbar,
+  IonModal,
+} from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -14,10 +22,18 @@ import { ToastService } from '../services/toast.service';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal]
+  imports: [
+    IonContent,
+    CommonModule,
+    FormsModule,
+    IonButton,
+    IonCard,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonModal,
+  ],
 })
-
-
 export class GamePage implements OnInit {
   statusGame: StatusGameDto = new StatusGameDto();
   playerOneStats: scoreBoard = new scoreBoard();
@@ -25,14 +41,14 @@ export class GamePage implements OnInit {
   activeFlagMode: boolean = false;
   player: number = 0;
   finishModal = true;
+
   constructor(
     private readonly gameService: GameService,
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService
   ) {
-      this.playerOneStats.turn = true;
+    this.playerOneStats.turn = true;
   }
-
 
   async ngOnInit() {
     const board = await this.gameService.getBoard(this.statusGame.boardGame);
@@ -42,64 +58,89 @@ export class GamePage implements OnInit {
     }
     this.statusGame.boardGame = board;
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.player = +params['turn'] || 1;
     });
 
     this.gameService.onGameStatusUpdate((status) => {
-      console.log(status)
-      let board: Board = new Board()
-      this.statusGame.boardGame = board.DeserializeJson(status.boardGame)
+      console.log(status);
+      let board: Board = new Board();
+      this.statusGame.boardGame = board.DeserializeJson(status.boardGame);
       this.statusGame.turnGame = status.turnGame;
 
-      if(this.statusGame.boardGame.gameOver === true){
-
+      if (this.statusGame.boardGame.gameOver === true) {
+        // this.finishModal = true;
       }
-      this.toastService.createToast(`Turn of the player ${status.turnGame}`,'secondary');
+
+      this.toastService.createToast(
+        `Turn of the player ${status.turnGame}`,
+        'secondary'
+      );
     });
   }
 
-
   openCellOnBoard(row: number, col: number) {
-    if(this.statusGame.turnGame !== this.player){
-      this.toastService.createToast("Is not your turn", 'warning');
+    if (this.statusGame.turnGame !== this.player) {
+      this.toastService.createToast('Is not your turn', 'warning');
       return;
     }
 
     if (this.activeFlagMode) {
       this.gameService.setFlagOnBoard(row, col, this.statusGame);
+      this.incrementFlags();
     } else {
-      this.gameService.openCellOnBoard(row, col, this.statusGame);
+      const cellsOpened = this.gameService.openCellOnBoard(
+        row,
+        col,
+        this.statusGame
+      );
+      if (cellsOpened) {
+        // Solo si se abrieron celdas
+        if (this.player === 1) {
+          this.playerOneStats.minesOpen += cellsOpened;
+        } else {
+          this.playerTwoStats.minesOpen += cellsOpened;
+        }
+      }
     }
   }
 
+  // Eliminar el método incrementCells() ya que no lo necesitamos más
+
+  incrementFlags() {
+    if (this.player === 1) {
+      this.playerOneStats.flagSets++;
+    } else {
+      this.playerTwoStats.flagSets++;
+    }
+  }
 
   activateFlagMode() {
-    if(this.statusGame.turnGame !== this.player){
-      this.toastService.createToast("Is not your turn", 'warning');
+    if (this.statusGame.turnGame !== this.player) {
+      this.toastService.createToast('Is not your turn', 'warning');
       return;
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
 
-
   desactivateFlagMode() {
-    if(this.statusGame.turnGame !== this.player){
-      this.toastService.createToast("Is not your turn", 'warning');
+    if (this.statusGame.turnGame !== this.player) {
+      this.toastService.createToast('Is not your turn', 'warning');
       return;
     }
-    this.activeFlagMode = this.gameService.desactiveFlagMode(this.activeFlagMode);
+    this.activeFlagMode = this.gameService.desactiveFlagMode(
+      this.activeFlagMode
+    );
   }
-
 
   restartGame() {
+    this.playerOneStats.resetScoreBoard();
+    this.playerTwoStats.resetScoreBoard();
     this.finishModal = false;
-    this.toastService.createToast("Partida reiniciada", 'success');
+    this.toastService.createToast('Partida reiniciada', 'success');
   }
 
-  
   exitGame() {
     this.finishModal = false;
   }
-
 }
