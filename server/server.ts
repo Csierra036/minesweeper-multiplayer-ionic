@@ -1,14 +1,19 @@
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { Board } from "./board-pieces/board";
+import { scoreBoard } from "./board-pieces/scoreBoard";
 import { StatusGameDto } from "./status_game/stateGame.dto";
 
 // Crea el servidor HTTP vacío (puede usarse con HTTPS si se agregan certificados)
 const httpsServer = createServer({});
 
-// Variables globales para almacenar el tablero y el estado del juego
+// Variables globales para almacenar el tablero, estado del juego y scores
 let boardTable: Board = new Board();
 let gameStatus: StatusGameDto = new StatusGameDto();
+let playerScores: { [key: number]: scoreBoard } = {
+  1: new scoreBoard(),
+  2: new scoreBoard(),
+};
 
 // Inicializa el servidor de Socket.io sobre el servidor HTTP
 const server = new Server(httpsServer, {
@@ -21,39 +26,74 @@ const server = new Server(httpsServer, {
 server.on("connection", (socket) => {
   console.log("Cliente conectado:", socket.id);
 
+  // Enviar el estado actual al nuevo cliente (incluyendo scores)
+  socket.emit("initialScores", playerScores);
+
   // Evento para guardar el tablero enviado por el cliente
   socket.on("saveCreateBoard", (board, callback) => {
     console.log("Tablero recibido:", board);
-    boardTable = board; // Guarda el tablero recibido
-    console.log("Tablero guardado en el servidor:", boardTable);
-    callback(true); // Confirma al cliente que se guardó correctamente
+    boardTable = board;
+    callback(true);
   });
 
   // Evento para enviar el tablero actual al cliente que lo solicita
   socket.on("getBoard", (callback) => {
     if (boardTable) {
-      console.log("Enviando tablero al cliente:", boardTable);
-      callback(boardTable); // Envía el tablero actual
+      callback(boardTable);
     } else {
-      console.log("No hay tablero disponible");
-      callback(null); // Indica que no hay tablero
-    }
-  });
-
-  // Evento para actualizar y propagar el estado del juego a todos los clientes
-  socket.on("followGameStatus", (status, callback) => {
-    if (status) {
-      gameStatus = status; // Actualiza el estado global
-      console.log("Enviado estado de juego a clientes:", boardTable);
-      server.emit("statusGame", gameStatus); // Notifica a todos los clientes conectados
-    } else {
-      console.log("No hay tablero disponible");
       callback(null);
     }
   });
+
+  // Evento para actualizar y propagar el estado del juego
+  socket.on("followGameStatus", (status, callback) => {
+    if (status) {
+      gameStatus = status;
+      server.emit("statusGame", gameStatus);
+      callback(true);
+    } else {
+      callback(null);
+    }
+  });
+
+  // Nuevos eventos para manejar el scoreboard
+  socket.on("updateScores", (player: number, scores: scoreBoard, callback) => {
+    if (player === 1 || player === 2) {
+      playerScores[player] = scores;
+
+      // Verificar si el juego terminó
+      if (scores.gameOver) {
+        playerScores[player].gameOver = true;
+      }
+
+      // Propagamos los nuevos scores a todos los clientes
+      server.emit("scoresUpdated", playerScores);
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+
+  socket.on("getScores", (callback) => {
+    callback(playerScores);
+  });
+
+  socket.on("resetScores", (callback) => {
+    playerScores = {
+      1: new scoreBoard(),
+      2: new scoreBoard(),
+    };
+    server.emit("scoresUpdated", playerScores);
+    callback(true);
+  });
+
+  // Manejo de desconexión
+  socket.on("disconnect", () => {
+    console.log("Cliente desconectado:", socket.id);
+  });
 });
 
-// Inicia el servidor en el puerto 8181 y escucha en todas las interfaces
+// Inicia el servidor en el puerto 8181
 httpsServer.listen(8181, "0.0.0.0", () => {
-  console.log("Servidor HTTPS Socket.io escuchando en puerto 8181");
+  console.log("Servidor Socket.io escuchando en puerto 8181");
 });

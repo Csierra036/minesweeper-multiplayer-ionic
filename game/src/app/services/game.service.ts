@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Board } from '../game/board-pieces/board';
+import { scoreBoard } from '../game/board-pieces/scoreBoard';
 import { ToastService } from './toast.service';
 import { WebsocketService } from './websocket.service';
 import { StatusGameDto } from '../game/status_game/stateGame.dto';
@@ -8,13 +9,13 @@ import { StatusGameDto } from '../game/status_game/stateGame.dto';
   providedIn: 'root',
 })
 export class GameService {
-  // Inyecta los servicios de Toast y Websocket
   constructor(
     private readonly toastService: ToastService,
     private readonly websocketService: WebsocketService
   ) {}
 
-  // Conecta al servidor usando la IP y puerto proporcionados
+  // ===== MÉTODOS DE CONEXIÓN Y TABLERO =====
+
   async connectToServer(
     serverIp: string,
     serverPort: string
@@ -41,27 +42,24 @@ export class GameService {
     return false;
   }
 
-  // Envía el tablero creado al servidor y muestra un toast según el resultado
   async sendCreatedBoard(boardGame: Board): Promise<boolean> {
     let success = false;
     try {
       success = await this.websocketService.sendCreatedBoard(boardGame);
-      console.log('Board sent successfully:', success);
     } catch (error) {
       success = false;
     }
 
     if (success) {
-      this.toastService.createToast(`Room created`, 'success');
+      this.toastService.createToast(`Sala creada`, 'success');
       return true;
     }
 
-    this.toastService.createToast('Error al conectar al servidor', 'danger');
+    this.toastService.createToast('Error al crear sala', 'danger');
     return false;
   }
 
-  // Solicita el tablero actual al servidor y actualiza el objeto Board local
-  async getBoard(board: Board) {
+  async getBoard(board: Board): Promise<Board | null> {
     try {
       const boardResult = await this.websocketService.getBoard();
       if (boardResult !== null) {
@@ -70,18 +68,18 @@ export class GameService {
         board.size = boardResult.size;
         board.mines = boardResult.mines;
         return board;
-      } else {
-        this.toastService.createToast('No hay tablero disponible', 'warning');
-        return null;
       }
+      this.toastService.createToast('No hay tablero disponible', 'warning');
+      return null;
     } catch (error) {
       this.toastService.createToast('Error con el servidor', 'error');
       return null;
     }
   }
 
-  // Cambia el turno entre jugador 1 y 2, mostrando un toast informativo
-  rotateRound(player: number) {
+  // ===== MÉTODOS DE JUEGO =====
+
+  rotateRound(player: number): number {
     if (player === 1) {
       player = 2;
       this.toastService.createToast('Turno del jugador 2', 'info');
@@ -92,8 +90,11 @@ export class GameService {
     return player;
   }
 
-  // Lógica para abrir una celda en el tablero y actualizar el estado del juego
-  openCellOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
+  openCellOnBoard(
+    row: number,
+    col: number,
+    gameStatus: StatusGameDto
+  ): number | undefined {
     if (gameStatus.boardGame.gameOver) return;
     const cell = gameStatus.boardGame.table[row][col];
     if (cell.revelated || cell.flag) return;
@@ -103,19 +104,19 @@ export class GameService {
 
     if (cell.mine) {
       gameStatus.boardGame.gameOver = true;
-      alert('💥 ¡Perdiste!');
+      this.toastService.createToast('💥 ¡Has perdido!', 'danger');
     }
 
     this.websocketService.sendTurnGame(gameStatus);
-    return cellsOpened; // Devolver el número de celdas abiertas
+    return cellsOpened;
   }
-  // Lógica para colocar una bandera en una celda
-  setFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
+
+  setFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto): void {
     const cell = gameStatus.boardGame.table[row][col];
     if (gameStatus.boardGame.gameOver) return;
     if (cell.revelated) return;
 
-    if (cell.flag == 0) {
+    if (cell.flag === 0) {
       gameStatus.boardGame.table[row][col].flag = 1;
       gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
       this.websocketService.sendTurnGame(gameStatus);
@@ -127,11 +128,10 @@ export class GameService {
     }
   }
 
-  // Activa el modo bandera y muestra un toast según el estado
-  activeFlagMode(flagMode: boolean) {
-    if (flagMode === true) {
+  activeFlagMode(flagMode: boolean): boolean {
+    if (flagMode) {
       this.toastService.createToast(
-        'El modo bandera ya esta activo',
+        'El modo bandera ya está activo',
         'warning'
       );
     } else {
@@ -141,11 +141,10 @@ export class GameService {
     return flagMode;
   }
 
-  // Desactiva el modo bandera y muestra un toast según el estado
-  desactiveFlagMode(flagMode: boolean) {
-    if (flagMode === false) {
+  desactiveFlagMode(flagMode: boolean): boolean {
+    if (!flagMode) {
       this.toastService.createToast(
-        'El modo bandera ya esta desactivado',
+        'El modo bandera ya está desactivado',
         'warning'
       );
     } else {
@@ -155,8 +154,119 @@ export class GameService {
     return flagMode;
   }
 
-  // Suscribe a los cambios de estado del juego provenientes del servidor
   onGameStatusUpdate(callback: (status: StatusGameDto) => void): void {
     this.websocketService.listenGameStatusUpdate(callback);
+  }
+
+  // ===== MÉTODOS DE SCOREBOARD =====
+
+  async updatePlayerScores(
+    player: number,
+    scores: scoreBoard
+  ): Promise<boolean> {
+    try {
+      const success = await this.websocketService.updateScores(player, scores);
+      if (success) {
+        this.toastService.createToast('Marcador actualizado', 'success');
+      } else {
+        this.toastService.createToast(
+          'Error al actualizar marcador',
+          'warning'
+        );
+      }
+      return success;
+    } catch (error) {
+      this.toastService.createToast(
+        'Error de conexión al actualizar marcador',
+        'danger'
+      );
+      return false;
+    }
+  }
+
+  async getCurrentScores(): Promise<{ [key: number]: scoreBoard }> {
+    try {
+      return await this.websocketService.getCurrentScores();
+    } catch (error) {
+      this.toastService.createToast('Error al obtener marcadores', 'warning');
+      return {
+        1: new scoreBoard(),
+        2: new scoreBoard(),
+      };
+    }
+  }
+
+  async incrementMinesOpened(
+    player: number,
+    currentScores: { [key: number]: scoreBoard }
+  ): Promise<void> {
+    const scores = currentScores[player];
+    scores.minesOpen++;
+    await this.updatePlayerScores(player, scores);
+  }
+
+  async incrementFlagsSet(
+    player: number,
+    currentScores: { [key: number]: scoreBoard }
+  ): Promise<void> {
+    const scores = currentScores[player];
+    scores.flagSets++;
+    await this.updatePlayerScores(player, scores);
+  }
+
+  async handleGameEnd(
+    player: number,
+    hitMine: boolean,
+    currentScores: { [key: number]: scoreBoard }
+  ): Promise<void> {
+    const scores = currentScores[player];
+    scores.gameOver = true;
+
+    if (hitMine) {
+      this.toastService.createToast(
+        `¡Jugador ${player} golpeó una mina!`,
+        'danger'
+      );
+    } else {
+      this.toastService.createToast(
+        `¡Jugador ${player} completó el tablero!`,
+        'success'
+      );
+    }
+
+    await this.updatePlayerScores(player, scores);
+  }
+
+  onScoresUpdate(
+    callback: (scores: { [key: number]: scoreBoard }) => void
+  ): void {
+    this.websocketService.listenForScoreUpdates(callback);
+  }
+
+  onInitialScores(
+    callback: (scores: { [key: number]: scoreBoard }) => void
+  ): void {
+    this.websocketService.listenForInitialScores(callback);
+  }
+
+  async resetAllScores(): Promise<boolean> {
+    try {
+      const success = await this.websocketService.resetScores();
+      if (success) {
+        this.toastService.createToast('Marcadores reiniciados', 'success');
+      } else {
+        this.toastService.createToast(
+          'Error al reiniciar marcadores',
+          'warning'
+        );
+      }
+      return success;
+    } catch (error) {
+      this.toastService.createToast(
+        'Error de conexión al reiniciar marcadores',
+        'danger'
+      );
+      return false;
+    }
   }
 }

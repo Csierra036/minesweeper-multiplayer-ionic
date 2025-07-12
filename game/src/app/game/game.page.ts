@@ -39,93 +39,189 @@ export class GamePage implements OnInit {
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
-  player: number = 0;
-  finishModal = true;
+  player: number = 1; // Jugador actual (1 o 2)
+  finishModal: boolean = true;
+  showGameOverAlert: boolean = false;
+  winner: number | null = null;
 
   constructor(
     private readonly gameService: GameService,
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService
   ) {
-    this.playerOneStats.turn = true;
+    this.playerOneStats.turn = true; // Inicialmente el jugador 1 comienza
   }
 
   async ngOnInit() {
-    const board = await this.gameService.getBoard(this.statusGame.boardGame);
-    if (!board) {
-      console.error('Error al obtener el tablero');
-      return;
-    }
-    this.statusGame.boardGame = board;
-
+    // Obtener el número de jugador de los parámetros de la ruta
     this.route.queryParams.subscribe((params) => {
       this.player = +params['turn'] || 1;
     });
 
+    // Obtener el tablero inicial
+    const board = await this.gameService.getBoard(this.statusGame.boardGame);
+    if (!board) {
+      console.error('Error al obtener el tablero');
+      this.toastService.createToast('Error al cargar el tablero', 'danger');
+      return;
+    }
+    this.statusGame.boardGame = board;
+
+    // Suscribirse a actualizaciones del estado del juego
     this.gameService.onGameStatusUpdate((status) => {
-      console.log(status);
-      let board: Board = new Board();
+      const board: Board = new Board();
       this.statusGame.boardGame = board.DeserializeJson(status.boardGame);
       this.statusGame.turnGame = status.turnGame;
 
-      if (this.statusGame.boardGame.gameOver === true) {
-        // this.finishModal = true;
-      }
+      // Actualizar turnos en los stats
+      this.playerOneStats.turn = status.turnGame === 1;
+      this.playerTwoStats.turn = status.turnGame === 2;
 
-      this.toastService.createToast(
-        `Turn of the player ${status.turnGame}`,
-        'secondary'
-      );
+      if (this.statusGame.boardGame.gameOver) {
+        this.handleGameOver();
+      }
     });
+
+    // Suscribirse a actualizaciones de los scores
+    this.gameService.onScoresUpdate((scores) => {
+      this.updateScoresFromServer(scores);
+    });
+
+    // Obtener los scores iniciales
+    const currentScores = await this.gameService.getCurrentScores();
+    this.updateScoresFromServer(currentScores);
   }
 
-  openCellOnBoard(row: number, col: number) {
+  /**
+   * Actualiza los scores locales con los datos del servidor
+   * @param scores - Objeto con los scores de ambos jugadores
+   */
+  private updateScoresFromServer(scores: { [key: number]: scoreBoard }) {
+    if (scores[1]) {
+      this.playerOneStats.minesOpen = scores[1].minesOpen;
+      this.playerOneStats.flagSets = scores[1].flagSets;
+      this.playerOneStats.gameOver = scores[1].gameOver;
+      this.playerOneStats.turn = scores[1].turn;
+    }
+    if (scores[2]) {
+      this.playerTwoStats.minesOpen = scores[2].minesOpen;
+      this.playerTwoStats.flagSets = scores[2].flagSets;
+      this.playerTwoStats.gameOver = scores[2].gameOver;
+      this.playerTwoStats.turn = scores[2].turn;
+    }
+  }
+
+  /**
+   * Maneja la acción de abrir una celda o colocar bandera
+   * @param row - Fila de la celda
+   * @param col - Columna de la celda
+   */
+  async openCellOnBoard(row: number, col: number) {
     if (this.statusGame.turnGame !== this.player) {
-      this.toastService.createToast('Is not your turn', 'warning');
+      this.toastService.createToast('No es tu turno', 'warning');
       return;
     }
 
-    if (this.activeFlagMode) {
-      this.gameService.setFlagOnBoard(row, col, this.statusGame);
-      this.incrementFlags();
-    } else {
-      const cellsOpened = this.gameService.openCellOnBoard(
-        row,
-        col,
-        this.statusGame
-      );
-      if (cellsOpened) {
-        // Solo si se abrieron celdas
-        if (this.player === 1) {
-          this.playerOneStats.minesOpen += cellsOpened;
-        } else {
-          this.playerTwoStats.minesOpen += cellsOpened;
+    try {
+      if (this.activeFlagMode) {
+        // Modo bandera activado
+        this.gameService.setFlagOnBoard(row, col, this.statusGame);
+        await this.updateFlagCount();
+      } else {
+        // Modo abrir celda
+        const cellsOpened = this.gameService.openCellOnBoard(
+          row,
+          col,
+          this.statusGame
+        );
+        if (cellsOpened) {
+          await this.updateMinesCount(cellsOpened);
         }
       }
+
+      // Verificar si el juego terminó
+      if (this.statusGame.boardGame.gameOver) {
+        this.handleGameOver();
+      }
+    } catch (error) {
+      console.error('Error al realizar jugada:', error);
+      this.toastService.createToast('Error al realizar jugada', 'danger');
     }
   }
 
-  // Eliminar el método incrementCells() ya que no lo necesitamos más
-
-  incrementFlags() {
+  /**
+   * Actualiza el contador de banderas y sincroniza con el servidor
+   */
+  private async updateFlagCount() {
     if (this.player === 1) {
       this.playerOneStats.flagSets++;
     } else {
       this.playerTwoStats.flagSets++;
     }
+    await this.syncScores();
   }
 
+  /**
+   * Actualiza el contador de minas abiertas y sincroniza con el servidor
+   * @param cellsOpened - Número de celdas abiertas
+   */
+  private async updateMinesCount(cellsOpened: number) {
+    if (this.player === 1) {
+      this.playerOneStats.minesOpen += cellsOpened;
+    } else {
+      this.playerTwoStats.minesOpen += cellsOpened;
+    }
+    await this.syncScores();
+  }
+
+  /**
+   * Sincroniza los scores con el servidor
+   */
+  private async syncScores() {
+    try {
+      await this.gameService.updatePlayerScores(
+        this.player,
+        this.player === 1 ? this.playerOneStats : this.playerTwoStats
+      );
+    } catch (error) {
+      console.error('Error al sincronizar puntuación:', error);
+      this.toastService.createToast('Error al actualizar puntuación', 'danger');
+    }
+  }
+
+  /**
+   * Maneja el fin del juego y determina al ganador
+   */
+  private handleGameOver() {
+    this.showGameOverAlert = true;
+
+    // Determinar el ganador basado en las minas abiertas
+    if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
+      this.winner = 1;
+    } else if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen) {
+      this.winner = 2;
+    } else {
+      this.winner = null; // Empate
+    }
+  }
+
+  /**
+   * Activa el modo bandera
+   */
   activateFlagMode() {
     if (this.statusGame.turnGame !== this.player) {
-      this.toastService.createToast('Is not your turn', 'warning');
+      this.toastService.createToast('No es tu turno', 'warning');
       return;
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
 
+  /**
+   * Desactiva el modo bandera
+   */
   desactivateFlagMode() {
     if (this.statusGame.turnGame !== this.player) {
-      this.toastService.createToast('Is not your turn', 'warning');
+      this.toastService.createToast('No es tu turno', 'warning');
       return;
     }
     this.activeFlagMode = this.gameService.desactiveFlagMode(
@@ -133,14 +229,51 @@ export class GamePage implements OnInit {
     );
   }
 
-  restartGame() {
-    this.playerOneStats.resetScoreBoard();
-    this.playerTwoStats.resetScoreBoard();
-    this.finishModal = false;
-    this.toastService.createToast('Partida reiniciada', 'success');
+  /**
+   * Reinicia el juego completamente
+   */
+  async restartGame() {
+    try {
+      // Reiniciar stats locales
+      this.playerOneStats.resetScoreBoard();
+      this.playerTwoStats.resetScoreBoard();
+
+      // Reiniciar estado del juego
+      this.statusGame = new StatusGameDto();
+      this.finishModal = false;
+      this.showGameOverAlert = false;
+      this.winner = null;
+      this.activeFlagMode = false;
+
+      // Reiniciar scores en el servidor
+      await this.gameService.resetAllScores();
+
+      // Obtener nuevo tablero
+      const board = await this.gameService.getBoard(this.statusGame.boardGame);
+      if (board) {
+        this.statusGame.boardGame = board;
+      }
+
+      this.toastService.createToast('Partida reiniciada', 'success');
+    } catch (error) {
+      console.error('Error al reiniciar juego:', error);
+      this.toastService.createToast('Error al reiniciar partida', 'danger');
+    }
   }
 
+  /**
+   * Cierra el modal de fin de juego
+   */
   exitGame() {
     this.finishModal = false;
+  }
+
+  /**
+   * Devuelve el mensaje de fin de juego según el ganador
+   */
+  getGameOverMessage(): string {
+    if (this.winner === 1) return '¡Jugador 1 ha ganado!';
+    if (this.winner === 2) return '¡Jugador 2 ha ganado!';
+    return '¡El juego ha terminado en empate!';
   }
 }
