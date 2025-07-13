@@ -32,12 +32,12 @@ import { ToastService } from '../services/toast.service';
   ],
 })
 
-// Componente para la página de unirse a una sala existente
+
 export class JoinRoomPagePage implements OnInit {
-  // Código de la sala ingresado por el usuario
+  
   codeRoom: string = '';
 
-  // Inyección de dependencias: servicios de juego, enrutador y notificaciones
+  
   constructor(
     private gameService: GameService,
     private router: Router,
@@ -45,10 +45,10 @@ export class JoinRoomPagePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Método del ciclo de vida: aquí podrías inicializar datos si es necesario
+    
   }
 
-  // Guarda la información ingresada por el usuario (código de sala)
+  
   SaveInfo() {
     const serverData = {
       codeRoom: this.codeRoom,
@@ -57,10 +57,8 @@ export class JoinRoomPagePage implements OnInit {
     return serverData;
   }
 
-  // Método para intentar unirse a una sala usando el código ingresado
+  
   JoinRoom() {
     const serverData = this.SaveInfo();
-    // Aquí podrías llamar a un método del servicio para validar el código y navegar
-    // Ejemplo: this.gameService.joinRoom(serverData).then(...)
   }
 }

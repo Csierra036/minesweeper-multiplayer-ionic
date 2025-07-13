@@ -30,14 +30,10 @@ import { ToastService } from '../services/toast.service';
   ],
 })
 
-// Componente para la página principal de conexión al servidor
 export class MainConnectServerPage implements OnInit {
-  // IP del servidor ingresada por el usuario
   serverIp: string = '';
-  // Puerto del servidor ingresado por el usuario
   serverPort: string = '';
 
-  // Inyección de dependencias: servicio de juego, enrutador y notificaciones
   constructor(
     private gameService: GameService,
     private router: Router,
@@ -45,10 +41,9 @@ export class MainConnectServerPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Método del ciclo de vida: aquí podrías inicializar datos si es necesario
   }
 
-  // Guarda la información ingresada por el usuario (IP y puerto del servidor)
+
   SaveInfo() {
     const serverData = {
       serverIp: this.serverIp,
@@ -57,10 +52,10 @@ export class MainConnectServerPage implements OnInit {
 
     return serverData;
   }
+  
 
-  // Intenta conectarse al servidor con los datos ingresados
   async JoinRoom() {
-    // Valida que ambos campos estén completos
+
     if (!this.serverIp || !this.serverPort) {
       this.toastService.createToast(
         'Por favor completa IP y puerto',
@@ -68,17 +63,17 @@ export class MainConnectServerPage implements OnInit {
       );
       return;
     }
-    // Muestra mensaje de intento de conexión
+
     this.toastService.createToast(
       `Conectando a ${this.serverIp}:${this.serverPort}`,
       'warning'
     );
-    // Llama al servicio para conectar al servidor
+    
     const connected = await this.gameService.connectToServer(
       this.serverIp,
       this.serverPort
     );
-    // Si la conexión fue exitosa, navega a la pantalla principal
+  
     if (connected) {
       this.router.navigate(['/home']);
     }

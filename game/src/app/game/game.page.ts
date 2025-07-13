@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonButton,
-  IonCard,
-  IonTitle,
-  IonHeader,
-  IonToolbar,
-  IonModal,
-} from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonCard, IonTitle, IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -23,25 +15,18 @@ import { ToastService } from '../services/toast.service';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [
-    IonContent,
-    CommonModule,
-    FormsModule,
-    IonButton,
-    IonCard,
-    IonTitle,
-    IonToolbar,
-    IonHeader,
-    IonModal,
+  imports: [ IonContent, CommonModule, FormsModule,
+    IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
   ],
 })
+
 export class GamePage implements OnInit {
   statusGame: StatusGameDto = new StatusGameDto();
   playerOneStats: scoreBoard = new scoreBoard();
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   player: number = 1; // Jugador actual (1 o 2)
-  finishModal: boolean = true;
+  finishModal: boolean = false;
   showGameOverAlert: boolean = false;
   winner: number | null = null;
 
@@ -50,25 +35,27 @@ export class GamePage implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService
   ) {
-    this.playerOneStats.turn = true; // Inicialmente el jugador 1 comienza
+    this.playerOneStats.turn = true;
   }
 
   async ngOnInit() {
+    
     // Obtener el número de jugador de los parámetros de la ruta
     this.route.queryParams.subscribe((params) => {
       this.player = +params['turn'] || 1;
     });
 
-    // Obtener el tablero inicial
     const board = await this.gameService.getBoard(this.statusGame.boardGame);
+    const currentScores = await this.gameService.getCurrentScores();
+
     if (!board) {
-      console.error('Error al obtener el tablero');
-      this.toastService.createToast('Error al cargar el tablero', 'danger');
+      console.error('Error obtaining the board');
+      this.toastService.createToast('Error loading the board', 'danger');
       return;
     }
+
     this.statusGame.boardGame = board;
 
-    // Suscribirse a actualizaciones del estado del juego
     this.gameService.onGameStatusUpdate((status) => {
       const board: Board = new Board();
       this.statusGame.boardGame = board.DeserializeJson(status.boardGame);
@@ -83,20 +70,19 @@ export class GamePage implements OnInit {
       }
     });
 
-    // Suscribirse a actualizaciones de los scores
     this.gameService.onScoresUpdate((scores) => {
       this.updateScoresFromServer(scores);
     });
 
-    // Obtener los scores iniciales
-    const currentScores = await this.gameService.getCurrentScores();
     this.updateScoresFromServer(currentScores);
   }
+
 
   // Método para hacer floor división en template
   floorDiv(dividend: number, divisor: number): number {
     return Math.floor(dividend / divisor);
   }
+
 
   // Grid style dinámico según tamaño del tablero
   get gridStyle() {
@@ -107,11 +93,13 @@ export class GamePage implements OnInit {
     };
   }
 
+
   // Aplana la matriz 2D de celdas a un array plano para el ngFor
   get flatCells(): Cell[] {
     if (!this.statusGame.boardGame.table) return [];
     return ([] as Cell[]).concat(...this.statusGame.boardGame.table);
   }
+
 
   /**
    * Actualiza los scores locales con los datos del servidor
@@ -132,6 +120,7 @@ export class GamePage implements OnInit {
     }
   }
 
+  
   /**
    * Maneja la acción de abrir una celda o colocar bandera
    * @param row - Fila de la celda
@@ -169,6 +158,8 @@ export class GamePage implements OnInit {
       this.toastService.createToast('Error al realizar jugada', 'danger');
     }
   }
+
+
   /**
    * Actualiza el contador de banderas y sincroniza con el servidor
    */
@@ -180,6 +171,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   /**
    * Actualiza el contador de minas abiertas y sincroniza con el servidor
@@ -193,6 +185,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   /**
    * Sincroniza los scores con el servidor
@@ -208,6 +201,7 @@ export class GamePage implements OnInit {
       this.toastService.createToast('Error al actualizar puntuación', 'danger');
     }
   }
+
 
   /**
    * Maneja el fin del juego y determina al ganador
@@ -225,6 +219,7 @@ export class GamePage implements OnInit {
     }
   }
 
+
   /**
    * Activa el modo bandera
    */
@@ -235,6 +230,7 @@ export class GamePage implements OnInit {
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
+
 
   /**
    * Desactiva el modo bandera
@@ -248,6 +244,7 @@ export class GamePage implements OnInit {
       this.activeFlagMode
     );
   }
+
 
   /**
    * Reinicia el juego completamente
@@ -281,12 +278,14 @@ export class GamePage implements OnInit {
     }
   }
 
+
   /**
    * Cierra el modal de fin de juego
    */
   exitGame() {
     this.finishModal = false;
   }
+
 
   /**
    * Devuelve el mensaje de fin de juego según el ganador
