@@ -10,4 +10,11 @@ export class Cell {
   flagImage: string = '';
   // Número de minas adyacentes a esta celda
   adjacentMines: number = 0;
+
+  // Método para obtener la ruta de la imagen de la bandera
+  getFlagImage(): string {
+    if (this.flag === 1) return 'assets/player_1_icon.png';
+    if (this.flag === 2) return 'assets/player_2_icon.png';
+    return ''; // Sin bandera
+  }
 }

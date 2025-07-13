@@ -124,31 +124,30 @@ export class GamePage implements OnInit {
 
     try {
       if (this.activeFlagMode) {
-        // Modo bandera activado
+        // Elimina la asignación manual de cell.flag aquí
+        // Solo llama al servicio
         this.gameService.setFlagOnBoard(row, col, this.statusGame);
         await this.updateFlagCount();
       } else {
-        // Modo abrir celda
-        const cellsOpened = this.gameService.openCellOnBoard(
-          row,
-          col,
-          this.statusGame
-        );
-        if (cellsOpened) {
-          await this.updateMinesCount(cellsOpened);
+        const cell = this.statusGame.boardGame.table[row][col];
+        if (!cell.flag) {
+          const cellsOpened = this.gameService.openCellOnBoard(
+            row,
+            col,
+            this.statusGame
+          );
+          if (cellsOpened) await this.updateMinesCount(cellsOpened);
+        } else {
+          this.toastService.createToast('Retira la bandera primero', 'warning');
         }
       }
 
-      // Verificar si el juego terminó
-      if (this.statusGame.boardGame.gameOver) {
-        this.handleGameOver();
-      }
+      if (this.statusGame.boardGame.gameOver) this.handleGameOver();
     } catch (error) {
-      console.error('Error al realizar jugada:', error);
+      console.error('Error:', error);
       this.toastService.createToast('Error al realizar jugada', 'danger');
     }
   }
-
   /**
    * Actualiza el contador de banderas y sincroniza con el servidor
    */

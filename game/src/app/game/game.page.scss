@@ -55,6 +55,20 @@
   background-color: #e0e0e0;
 }
 
+/* === Estilos SOLO para las banderas === */
+.cell {
+  img.flag-image {
+    width: 32px; /* Tamaño igual al de las celdas (32px) */
+    height: 32px;
+    object-fit: cover; /* Cubre todo el espacio sin deformar */
+    transition: transform 0.2s; /* Efecto al colocar bandera */
+
+    &:hover {
+      transform: scale(1.1); /* Efecto de crecimiento al pasar el mouse */
+    }
+  }
+}
+
 .btn {
   font-weight: bold;
 }

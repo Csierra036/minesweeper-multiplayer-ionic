@@ -117,7 +117,8 @@ export class GameService {
     if (cell.revelated) return;
 
     if (cell.flag === 0) {
-      gameStatus.boardGame.table[row][col].flag = 1;
+      // Asignar la bandera al jugador actual (1 o 2)
+      cell.flag = gameStatus.turnGame; // Usa el turno actual para determinar la bandera
       gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
       this.websocketService.sendTurnGame(gameStatus);
     } else {

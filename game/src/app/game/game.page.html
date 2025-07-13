@@ -32,7 +32,22 @@
         <span *ngIf="cell.revelated">
           {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
         </span>
-        <span *ngIf="!cell.revelated && cell.flag">🚩</span>
+
+        <!-- Mostrar imagen de bandera según jugador -->
+        <img
+          *ngIf="!cell.revelated && cell.flag === 1"
+          src="assets/icon/player_1_icon.png"
+          alt="Bandera Jugador 1"
+          class="flag-image"
+        />
+        <img
+          *ngIf="!cell.revelated && cell.flag === 2"
+          src="assets/icon/player_2_icon.png"
+          alt="Bandera Jugador 2"
+          class="flag-image"
+        />
+
+        <!-- Celda no revelada sin bandera -->
         <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
       </div>
     </div>
