@@ -15,6 +15,7 @@ import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
 import { ActivatedRoute } from '@angular/router';
 import { Board } from './board-pieces/board';
+import { Cell } from './board-pieces/cell';
 import { ToastService } from '../services/toast.service';
 
 @Component({
@@ -90,6 +91,26 @@ export class GamePage implements OnInit {
     // Obtener los scores iniciales
     const currentScores = await this.gameService.getCurrentScores();
     this.updateScoresFromServer(currentScores);
+  }
+
+  // Método para hacer floor división en template
+  floorDiv(dividend: number, divisor: number): number {
+    return Math.floor(dividend / divisor);
+  }
+
+  // Grid style dinámico según tamaño del tablero
+  get gridStyle() {
+    const size = this.statusGame.boardGame.size || 8;
+    return {
+      'grid-template-columns': `repeat(${size}, 8px)`,
+      'grid-auto-rows': `8px`,
+    };
+  }
+
+  // Aplana la matriz 2D de celdas a un array plano para el ngFor
+  get flatCells(): Cell[] {
+    if (!this.statusGame.boardGame.table) return [];
+    return ([] as Cell[]).concat(...this.statusGame.boardGame.table);
   }
 
   /**
