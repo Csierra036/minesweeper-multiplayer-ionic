@@ -1,19 +1,26 @@
+/* Fondo de la página */
 .background {
   --background: url("src/assets/backgrounds/forest_background.jpg") no-repeat
     center center / cover;
 }
 
+/* Estilos del modal */
+.custom-modal-background {
+  --background: white;
+  --backdrop-opacity: 0;
+}
+
 /* Contenedor de los marcadores */
 .flex-storyboard-container {
   display: flex;
-  padding: 20px 10px;
+  padding: 50px;
   justify-content: space-between;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .flex-storyboard-container > ion-title {
-  font-size: 14px;
+  font-size: 2px;
 }
 
 .flex-storyboard-container > ion-card {
@@ -23,38 +30,78 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 10px;
 }
 
-/* Tablero con CSS Grid */
+/* Tablero principal */
 .board {
-  display: grid;
-  justify-content: center;
-  gap: 1px; /* espacio entre celdas */
-  margin: 10px auto;
-  max-width: 100vw; /* Limita ancho total al viewport */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centrado vertical */
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+  margin-top: 10px;
 }
 
-/* Cada celda del tablero */
+/* Filas del tablero */
+.row {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+}
+
+/* Celdas individuales */
+/* Tamaño base para las celdas */
 .cell {
-  aspect-ratio: 1 / 1;
-  width: 10px;
-  height: 10px;
   border: 1px solid #ccc;
-  background-color: #e0e0e0;
-  font-size: clamp(6px, 0.8vw, 10px);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 10px;
+  background-color: #e0e0e0;
   box-sizing: border-box;
-  cursor: pointer;
-  user-select: none;
+  overflow: hidden;
+  padding: 1px;
+  flex: 0 0 auto;
 }
 
-/* Imagen de bandera en celda */
+/* Tamaños de celda según el número de columnas */
+.board-30 .cell {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+}
+
+.board-20 .cell {
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.board-15 .cell {
+  width: 15px;
+  height: 15px;
+  font-size: 12px;
+}
+
+.board-12 .cell {
+  width: 12px;
+  height: 12px;
+  font-size: 10px;
+}
+
+.board-10 .cell {
+  width: 10px;
+  height: 10px;
+  font-size: 8px;
+}
+
+/* Imagen de la bandera */
 .cell img.flag-image {
-  width: 14px;
-  height: 14px;
+  width: 90%;
+  height: 90%;
   object-fit: cover;
   transition: transform 0.2s;
 }
@@ -63,25 +110,25 @@
   transform: scale(1.1);
 }
 
-/* Botones modo bandera y pala */
-.button-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
+/* Botones de modo bandera y pala */
 .btn {
   font-weight: bold;
 }
 
-/* Fondo y estilo modal fin de juego */
-.custom-modal-background {
-  --background: white;
-  --backdrop-opacity: 0;
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 70px;
 }
 
-/* Estilo texto modal fin */
+/* Contenedor del marcador */
+.score-board {
+  display: flex;
+  gap: 10px;
+}
+
+/* Texto del modal de fin de juego */
 .end-title {
   text-align: center;
   font-size: 15px;
