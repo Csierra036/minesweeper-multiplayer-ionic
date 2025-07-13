@@ -1,13 +1,16 @@
+/* Styles for the background of the game page */
 .background {
-  --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
+  --background: url("src/assets/backgrounds/forest_background.jpg") no-repeat
+    center center / cover;
 }
 
+/* Estilos para el fondo del modal personalizado */
 .custom-modal-background {
   --background: white; /* fondo blanco para el modal */
-  --backdrop-opacity: 0.0; /* si quieres quitar el fondo oscuro de fondo */
+  --backdrop-opacity: 0; /* si quieres quitar el fondo oscuro de fondo */
 }
 
-.flex-storyboard-container{
+.flex-storyboard-container {
   display: flex;
   padding: 50px;
   justify-content: space-between;
@@ -28,7 +31,6 @@
   align-items: center;
   font-size: 10px;
 }
-
 
 .board {
   display: flex;
@@ -53,6 +55,20 @@
   background-color: #e0e0e0;
 }
 
+/* === Estilos SOLO para las banderas === */
+.cell {
+  img.flag-image {
+    width: 32px; /* Tamaño igual al de las celdas (32px) */
+    height: 32px;
+    object-fit: cover; /* Cubre todo el espacio sin deformar */
+    transition: transform 0.2s; /* Efecto al colocar bandera */
+
+    &:hover {
+      transform: scale(1.1); /* Efecto de crecimiento al pasar el mouse */
+    }
+  }
+}
+
 .btn {
   font-weight: bold;
 }
@@ -64,12 +80,12 @@
   margin-top: 70px;
 }
 
-.score-board{
+.score-board {
   display: flex;
   gap: 10px;
 }
 
-.end-title{
+.end-title {
   text-align: center;
   font-size: 15px;
 }
