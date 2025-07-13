@@ -12,6 +12,7 @@ export class WebsocketService {
 
   constructor() {}
 
+  
   /**
    * Establece conexión con el servidor WebSocket
    * @param serverIp - Dirección IP del servidor
@@ -36,6 +37,7 @@ export class WebsocketService {
     });
   }
 
+
   /**
    * Envía el tablero creado al servidor
    * @param boardGame - Tablero del juego a enviar
@@ -53,6 +55,7 @@ export class WebsocketService {
     });
   }
 
+
   /**
    * Obtiene el tablero actual del servidor
    * @returns Promise con el tablero o null si no hay tablero
@@ -68,6 +71,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   /**
    * Envía el estado del juego al servidor
@@ -86,6 +90,7 @@ export class WebsocketService {
     });
   }
 
+
   /**
    * Escucha actualizaciones del estado del juego
    * @param callback - Función a ejecutar cuando llegue una actualización
@@ -94,7 +99,6 @@ export class WebsocketService {
     this.socket.on('statusGame', callback);
   }
 
-  // ===== MÉTODOS PARA EL SCOREBOARD =====
 
   /**
    * Actualiza los scores de un jugador en el servidor
@@ -113,6 +117,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   /**
    * Obtiene los scores actuales del servidor
@@ -133,6 +138,7 @@ export class WebsocketService {
     });
   }
 
+
   /**
    * Escucha actualizaciones de scores desde el servidor
    * @param callback - Función a ejecutar cuando llegue una actualización
@@ -143,6 +149,7 @@ export class WebsocketService {
     this.socket.on('scoresUpdated', callback);
   }
 
+
   /**
    * Escucha los scores iniciales al conectarse
    * @param callback - Función a ejecutar con los scores iniciales
@@ -152,6 +159,7 @@ export class WebsocketService {
   ): void {
     this.socket.on('initialScores', callback);
   }
+
 
   /**
    * Reinicia los scores en el servidor
@@ -168,6 +176,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   /**
    * Desconecta el socket del servidor

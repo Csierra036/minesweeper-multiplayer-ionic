@@ -34,6 +34,8 @@ import { ToastService } from '../services/toast.service';
     IonModal,
   ],
 })
+
+
 export class GamePage implements OnInit {
   statusGame: StatusGameDto = new StatusGameDto();
   playerOneStats: scoreBoard = new scoreBoard();
@@ -51,6 +53,7 @@ export class GamePage implements OnInit {
   ) {
     this.playerOneStats.turn = true; // Inicialmente el jugador 1 comienza
   }
+
 
   async ngOnInit() {
     // Obtener el número de jugador de los parámetros de la ruta
@@ -92,6 +95,7 @@ export class GamePage implements OnInit {
     this.updateScoresFromServer(currentScores);
   }
 
+
   /**
    * Actualiza los scores locales con los datos del servidor
    * @param scores - Objeto con los scores de ambos jugadores
@@ -110,6 +114,7 @@ export class GamePage implements OnInit {
       this.playerTwoStats.turn = scores[2].turn;
     }
   }
+
 
   /**
    * Maneja la acción de abrir una celda o colocar bandera
@@ -148,6 +153,8 @@ export class GamePage implements OnInit {
       this.toastService.createToast('Error al realizar jugada', 'danger');
     }
   }
+
+
   /**
    * Actualiza el contador de banderas y sincroniza con el servidor
    */
@@ -159,6 +166,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   /**
    * Actualiza el contador de minas abiertas y sincroniza con el servidor
@@ -172,6 +180,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   /**
    * Sincroniza los scores con el servidor
@@ -187,6 +196,7 @@ export class GamePage implements OnInit {
       this.toastService.createToast('Error al actualizar puntuación', 'danger');
     }
   }
+
 
   /**
    * Maneja el fin del juego y determina al ganador
@@ -204,6 +214,7 @@ export class GamePage implements OnInit {
     }
   }
 
+
   /**
    * Activa el modo bandera
    */
@@ -214,6 +225,7 @@ export class GamePage implements OnInit {
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
+
 
   /**
    * Desactiva el modo bandera
@@ -227,6 +239,7 @@ export class GamePage implements OnInit {
       this.activeFlagMode
     );
   }
+
 
   /**
    * Reinicia el juego completamente
@@ -260,12 +273,14 @@ export class GamePage implements OnInit {
     }
   }
 
+
   /**
    * Cierra el modal de fin de juego
    */
   exitGame() {
     this.finishModal = false;
   }
+
 
   /**
    * Devuelve el mensaje de fin de juego según el ganador
