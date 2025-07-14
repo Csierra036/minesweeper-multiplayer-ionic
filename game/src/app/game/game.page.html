@@ -28,9 +28,17 @@
         class="cell"
         (click)="openCellOnBoard(i, j)"
       >
-        <!-- Mostrar contenido según estado de la celda -->
-        <span *ngIf="cell.revelated">
-          {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
+        <!-- Imagen si la celda está revelada y es mina -->
+        <img
+          *ngIf="cell.revelated && cell.mine"
+          src="assets/icon/bomb.png"
+          alt="Mina"
+          class="mine-image"
+        />
+
+        <!-- Mostrar número si está revelada y no es mina -->
+        <span *ngIf="cell.revelated && !cell.mine">
+          {{ cell.adjacentMines || '' }}
         </span>
 
         <!-- Mostrar imagen de bandera según jugador -->

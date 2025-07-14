@@ -98,6 +98,13 @@
   font-size: 8px;
 }
 
+//Imagen de la mina
+.mine-image {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  pointer-events: none;
+}
 /* Imagen de la bandera */
 .cell img.flag-image {
   width: 90%;
