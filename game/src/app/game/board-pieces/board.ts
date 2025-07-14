@@ -74,15 +74,35 @@ export class Board {
     }
   }
 
+  // Revela todas las minas del tablero
+  revealAllMines() {
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        const cell = this.table[i][j];
+        if (cell.mine) {
+          cell.revelated = true;
+        }
+      }
+    }
+  }
+
   // Abre una celda; si no tiene minas adyacentes, abre recursivamente las vecinas
   openCell(row: number, col: number): number {
     const cell = this.table[row][col];
     if (cell.revelated || cell.flag) return 0;
 
+    // Si el jugador abrió una mina: mostrar todas las minas y terminar el juego
+    if (cell.mine) {
+      cell.revelated = true;
+      this.revealAllMines();
+      this.gameOver = true;
+      return 1;
+    }
+
     let cellsOpened = 1; // Contamos esta celda
     cell.revelated = true;
 
-    if (cell.adjacentMines === 0 && !cell.mine) {
+    if (cell.adjacentMines === 0) {
       for (let dRow = -1; dRow <= 1; dRow++) {
         for (let dCol = -1; dCol <= 1; dCol++) {
           const neighborRow = row + dRow;
