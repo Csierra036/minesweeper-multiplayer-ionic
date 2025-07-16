@@ -1,4 +1,5 @@
 <ion-content class="background">
+  <!-- Contenedor de los marcadores de ambos jugadores -->
   <div class="flex-storyboard-container">
     <div>
       <ion-title>P1</ion-title>
@@ -16,34 +17,51 @@
     </div>
   </div>
 
-  <!-- Tablero con CSS Grid -->
-  <div class="board" [ngStyle]="gridStyle">
+  <!-- Renderizado del tablero de juego -->
+  <div class="board" [ngClass]="boardSizeClass">
     <div
-      *ngFor="let cell of flatCells; let idx = index"
-      class="cell"
-      (click)="openCellOnBoard(floorDiv(idx, statusGame.boardGame.size), idx % statusGame.boardGame.size)"
+      *ngFor="let row of statusGame.boardGame.table; let i = index"
+      class="row"
     >
-      <span *ngIf="cell.revelated">
-        {{ cell.mine ? '💣' : cell.adjacentMines || '' }}
-      </span>
+      <div
+        *ngFor="let cell of row; let j = index"
+        class="cell"
+        (click)="openCellOnBoard(i, j)"
+      >
+        <!-- Imagen si la celda está revelada y es mina -->
+        <img
+          *ngIf="cell.revelated && cell.mine"
+          src="assets/icon/bomb.png"
+          alt="Mina"
+          class="mine-image"
+        />
 
-      <img
-        *ngIf="!cell.revelated && cell.flag === 1"
-        src="assets/icon/player_1_icon.png"
-        alt="Bandera Jugador 1"
-        class="flag-image"
-      />
-      <img
-        *ngIf="!cell.revelated && cell.flag === 2"
-        src="assets/icon/player_2_icon.png"
-        alt="Bandera Jugador 2"
-        class="flag-image"
-      />
+        <!-- Mostrar número si está revelada y no es mina -->
+        <span *ngIf="cell.revelated && !cell.mine">
+          {{ cell.adjacentMines || '' }}
+        </span>
 
-      <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
+        <!-- Mostrar imagen de bandera según jugador -->
+        <img
+          *ngIf="!cell.revelated && cell.flag === 1"
+          src="assets/icon/player_1_icon.png"
+          alt="Bandera Jugador 1"
+          class="flag-image"
+        />
+        <img
+          *ngIf="!cell.revelated && cell.flag === 2"
+          src="assets/icon/player_2_icon.png"
+          alt="Bandera Jugador 2"
+          class="flag-image"
+        />
+
+        <!-- Celda no revelada sin bandera -->
+        <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
+      </div>
     </div>
   </div>
 
+  <!-- Botones para activar/desactivar modo bandera -->
   <div class="button-container">
     <ion-button class="btn" (click)="activateFlagMode()" fill="clear">
       <img src="assets/icon/flag_button_icon.png" alt="flag_icon_button" />
@@ -54,6 +72,7 @@
   </div>
 </ion-content>
 
+<!-- Modal personalizado para el fin del juego -->
 <div class="custom-modal-background">
   <ion-modal [isOpen]="finishModal" (didDismiss)="finishModal = false">
     <ng-template>

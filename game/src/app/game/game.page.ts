@@ -15,7 +15,6 @@ import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
 import { ActivatedRoute } from '@angular/router';
 import { Board } from './board-pieces/board';
-import { Cell } from './board-pieces/cell';
 import { ToastService } from '../services/toast.service';
 
 @Component({
@@ -41,7 +40,7 @@ export class GamePage implements OnInit {
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   player: number = 1; // Jugador actual (1 o 2)
-  finishModal: boolean = true;
+  finishModal: boolean = false;
   showGameOverAlert: boolean = false;
   winner: number | null = null;
 
@@ -93,24 +92,14 @@ export class GamePage implements OnInit {
     this.updateScoresFromServer(currentScores);
   }
 
-  // Método para hacer floor división en template
-  floorDiv(dividend: number, divisor: number): number {
-    return Math.floor(dividend / divisor);
-  }
+  get boardSizeClass(): string {
+    const cols = this.statusGame.boardGame?.size || 0;
 
-  // Grid style dinámico según tamaño del tablero
-  get gridStyle() {
-    const size = this.statusGame.boardGame.size || 8;
-    return {
-      'grid-template-columns': `repeat(${size}, 8px)`,
-      'grid-auto-rows': `8px`,
-    };
-  }
-
-  // Aplana la matriz 2D de celdas a un array plano para el ngFor
-  get flatCells(): Cell[] {
-    if (!this.statusGame.boardGame.table) return [];
-    return ([] as Cell[]).concat(...this.statusGame.boardGame.table);
+    if (cols >= 2 && cols <= 12) return 'board-30';
+    if (cols >= 13 && cols <= 20) return 'board-20';
+    if (cols >= 21 && cols <= 26) return 'board-15';
+    if (cols >= 27 && cols <= 32) return 'board-12';
+    return 'board-10'; // 33 en adelante o por defecto
   }
 
   /**
