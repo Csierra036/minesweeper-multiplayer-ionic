@@ -129,6 +129,23 @@ export class GameService {
     }
   }
 
+  removeFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto): void {
+    const cell = gameStatus.boardGame.table[row][col];
+    if (gameStatus.boardGame.gameOver) return;
+    if (cell.revelated) return;
+
+    if (cell.flag === gameStatus.turnGame) {
+      cell.flag = 0;
+      gameStatus.turnGame = this.rotateRound(gameStatus.turnGame);
+      this.websocketService.sendTurnGame(gameStatus);
+    } else {
+      this.toastService.createToast(
+        'No puedes quitar la bandera del oponente',
+        'warning'
+      );
+    }
+  }
+
   activeFlagMode(flagMode: boolean): boolean {
     if (flagMode) {
       this.toastService.createToast(

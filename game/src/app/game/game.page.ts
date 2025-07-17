@@ -134,10 +134,19 @@ export class GamePage implements OnInit {
 
     try {
       if (this.activeFlagMode) {
-        // Elimina la asignación manual de cell.flag aquí
-        // Solo llama al servicio
-        this.gameService.setFlagOnBoard(row, col, this.statusGame);
-        await this.updateFlagCount();
+        const cell = this.statusGame.boardGame.table[row][col];
+        if (cell.flag === this.player) {
+          this.gameService.removeFlagOnBoard(row, col, this.statusGame);
+          await this.updateFlagCount(-1);
+        } else if (!cell.flag) {
+          this.gameService.setFlagOnBoard(row, col, this.statusGame);
+          await this.updateFlagCount(1);
+        } else {
+          this.toastService.createToast(
+            'La celda ya tiene bandera del oponente',
+            'warning'
+          );
+        }
       } else {
         const cell = this.statusGame.boardGame.table[row][col];
         if (!cell.flag) {
@@ -161,15 +170,14 @@ export class GamePage implements OnInit {
   /**
    * Actualiza el contador de banderas y sincroniza con el servidor
    */
-  private async updateFlagCount() {
+  private async updateFlagCount(delta: number = 1) {
     if (this.player === 1) {
-      this.playerOneStats.flagSets++;
+      this.playerOneStats.flagSets += delta;
     } else {
-      this.playerTwoStats.flagSets++;
+      this.playerTwoStats.flagSets += delta;
     }
     await this.syncScores();
   }
-
   /**
    * Actualiza el contador de minas abiertas y sincroniza con el servidor
    * @param cellsOpened - Número de celdas abiertas
