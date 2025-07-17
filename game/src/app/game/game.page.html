@@ -82,7 +82,26 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <p>¿What do you want?</p>
+        <p class="winner-message">{{ getGameOverMessage() }}</p>
+
+        <ion-card>
+          <div class="ion-padding">
+            <h2>Estadísticas Finales</h2>
+
+            <p>
+              <strong>Jugador 1</strong><br />
+              Celdas abiertas: {{ playerOneStats.minesOpen }}<br />
+              Banderas correctas: {{ playerOneStats.correctFlags }}
+            </p>
+
+            <p>
+              <strong>Jugador 2</strong><br />
+              Celdas abiertas: {{ playerTwoStats.minesOpen }}<br />
+              Banderas correctas: {{ playerTwoStats.correctFlags }}
+            </p>
+          </div>
+        </ion-card>
+
         <ion-button expand="block" color="success" (click)="restartGame()">
           Restart Game
         </ion-button>

@@ -110,12 +110,14 @@ export class GamePage implements OnInit {
     if (scores[1]) {
       this.playerOneStats.minesOpen = scores[1].minesOpen;
       this.playerOneStats.flagSets = scores[1].flagSets;
+      this.playerOneStats.correctFlags = scores[1].correctFlags; // <-- AGREGAR ESTA LÍNEA
       this.playerOneStats.gameOver = scores[1].gameOver;
       this.playerOneStats.turn = scores[1].turn;
     }
     if (scores[2]) {
       this.playerTwoStats.minesOpen = scores[2].minesOpen;
       this.playerTwoStats.flagSets = scores[2].flagSets;
+      this.playerTwoStats.correctFlags = scores[2].correctFlags; // <-- AGREGAR ESTA LÍNEA
       this.playerTwoStats.gameOver = scores[2].gameOver;
       this.playerTwoStats.turn = scores[2].turn;
     }
@@ -138,9 +140,17 @@ export class GamePage implements OnInit {
         if (cell.flag === this.player) {
           this.gameService.removeFlagOnBoard(row, col, this.statusGame);
           await this.updateFlagCount(-1);
+
+          if (cell.mine) {
+            await this.updateCorrectFlagsCount(-1);
+          }
         } else if (!cell.flag) {
           this.gameService.setFlagOnBoard(row, col, this.statusGame);
           await this.updateFlagCount(1);
+
+          if (cell.mine) {
+            await this.updateCorrectFlagsCount(1);
+          }
         } else {
           this.toastService.createToast(
             'La celda ya tiene bandera del oponente',
@@ -178,6 +188,16 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
+  private async updateCorrectFlagsCount(delta: number = 1) {
+    if (this.player === 1) {
+      this.playerOneStats.correctFlags += delta;
+    } else {
+      this.playerTwoStats.correctFlags += delta;
+    }
+    await this.syncScores();
+  }
+
   /**
    * Actualiza el contador de minas abiertas y sincroniza con el servidor
    * @param cellsOpened - Número de celdas abiertas
@@ -211,14 +231,24 @@ export class GamePage implements OnInit {
    */
   private handleGameOver() {
     this.showGameOverAlert = true;
+    this.finishModal = true; // ← Asegura que el modal de fin de juego se abra
 
-    // Determinar el ganador basado en las minas abiertas
+    // 1️ Comparar minas abiertas
     if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
       this.winner = 1;
     } else if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen) {
       this.winner = 2;
     } else {
-      this.winner = null; // Empate
+      // 2️ Si hay empate en minas abiertas, comparar banderas correctas
+      if (this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags) {
+        this.winner = 1;
+      } else if (
+        this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags
+      ) {
+        this.winner = 2;
+      } else {
+        this.winner = null; // Empate total
+      }
     }
   }
 
