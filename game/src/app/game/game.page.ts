@@ -212,7 +212,7 @@ export class GamePage implements OnInit {
   }
 
 
-  private gameOverEvent() {
+  gameOverEvent() {
     this.showGameOverAlert = true;
     this.finishModal = true;
 
