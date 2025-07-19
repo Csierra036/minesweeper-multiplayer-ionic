@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonContent,
-  IonInput,
-  IonTitle,
-  IonLabel,
-  IonItem,
-  IonButton,
-} from '@ionic/angular/standalone';
+import { IonContent, IonInput, IonTitle, IonLabel, IonItem, IonButton} from '@ionic/angular/standalone';
 import { GameService } from '../services/game.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../services/toast.service';
@@ -19,14 +12,8 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./main-connect-server.page.scss'],
   standalone: true,
   imports: [
-    IonContent,
-    IonTitle,
-    CommonModule,
-    FormsModule,
-    IonLabel,
-    IonItem,
-    IonButton,
-    IonInput,
+    IonContent, IonTitle, CommonModule,
+    FormsModule, IonLabel, IonItem, IonButton, IonInput,
   ],
 })
 
@@ -58,14 +45,14 @@ export class MainConnectServerPage implements OnInit {
 
     if (!this.serverIp || !this.serverPort) {
       this.toastService.createToast(
-        'Por favor completa IP y puerto',
+        'Please complete IP and port',
         'warning'
       );
       return;
     }
 
     this.toastService.createToast(
-      `Conectando a ${this.serverIp}:${this.serverPort}`,
+      `Connecting to ${this.serverIp}:${this.serverPort}`,
       'warning'
     );
     
