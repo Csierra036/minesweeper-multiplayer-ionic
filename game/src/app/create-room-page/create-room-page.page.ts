@@ -33,10 +33,10 @@ export class CreateRoomPagePage implements OnInit {
   }
 
   async setDifficulty(size: number, mines: number) {
-    this.board.table = []; // reinicia el tablero
+    this.board.table = [];
     this.board.setDifficulty(size, mines);
     this.board.setMinesRandom();
-    this.board.calculateAdjacentMines(); // calcular números
+    this.board.calculateAdjacentMines();
     
     const createdTable = await this.gameService.sendCreatedBoard(this.board);
     if(createdTable)
