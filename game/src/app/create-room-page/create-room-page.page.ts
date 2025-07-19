@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonModal, IonHeader, IonToolbar, IonTitle,IonItem,
-  IonLabel, IonButtons, ModalController } from '@ionic/angular/standalone';
+import { IonContent, IonButton, ModalController } from '@ionic/angular/standalone';
 import { Board } from '../game/board-pieces/board';
 import { GameService } from '../services/game.service';
 import { Router } from '@angular/router';
