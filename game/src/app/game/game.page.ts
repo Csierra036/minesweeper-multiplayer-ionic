@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle, IonButtons,
+import { IonContent, IonButton, IonCard, IonTitle,
   IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
@@ -16,7 +16,7 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./game.page.scss'],
   standalone: true,
   imports: [
-    IonContent, CommonModule, FormsModule, IonButtons,
+    IonContent, CommonModule, FormsModule,
     IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
   ],
 })
