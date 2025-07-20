@@ -27,7 +27,7 @@ export class GamePage implements OnInit {
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   player: number = 0;
-  finishModal: boolean = true;
+  finishModal: boolean = false;
   winner: number | null = null;
 
   constructor(
@@ -41,7 +41,7 @@ export class GamePage implements OnInit {
   async ngOnInit() {
     // Obtain the player number from the route parameters
     this.route.queryParams.subscribe((params) => {
-      this.player = +params['turn'] || 1;
+      this.player = +params['turn'];
     });
 
     const board = await this.gameService.getBoard(this.statusGame.boardGame);
@@ -111,6 +111,8 @@ export class GamePage implements OnInit {
 
 
   async openCellOnBoard(row: number, col: number) {
+    if(this.player == 0) return;
+
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
       return;
@@ -171,7 +173,8 @@ export class GamePage implements OnInit {
   async updateFlagCount(flagNumber: number = 1) {
     if (this.player === 1) {
       this.playerOneStats.flagSets += flagNumber;
-    } else {
+    }
+    else {
       this.playerTwoStats.flagSets += flagNumber;
     }
     await this.syncScores();
@@ -235,6 +238,8 @@ export class GamePage implements OnInit {
 
 
   activateFlagMode() {
+    if(this.player === 0) return;
+
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
       return;
@@ -245,6 +250,9 @@ export class GamePage implements OnInit {
 
 
   desactivateFlagMode() {
+    console.log(this.player)
+    if(this.player === 0) return;
+
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
       return;
@@ -256,6 +264,8 @@ export class GamePage implements OnInit {
 
 
   async restartGame() {
+    if(this.player === 0) return;
+
     try {
       this.playerOneStats.resetScoreBoard();
       this.playerTwoStats.resetScoreBoard();
