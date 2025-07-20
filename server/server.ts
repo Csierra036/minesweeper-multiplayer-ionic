@@ -9,6 +9,7 @@ const httpsServer = createServer({});
 
 let boardTable: Board = new Board();
 let gameStatus: StatusGameDto = new StatusGameDto();
+let gameStarted: boolean = false;
 let playerScores: { [key: number]: scoreBoard } = {
   1: new scoreBoard(),
   2: new scoreBoard(),
@@ -42,6 +43,17 @@ server.on("connection", (socket) => {
     } else {
       callback(null);
     }
+  });
+
+
+  socket.on("checkStartedGame", (callback) => {
+    callback(gameStarted);
+  });
+
+
+  socket.on("saveStartedGame", (status, callback) => {
+    gameStarted = status;
+    callback(true);
   });
 
   

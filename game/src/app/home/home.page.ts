@@ -13,7 +13,8 @@ import { ToastService } from '../services/toast.service';
 })
 
 export class HomePage {
-  constructor(private readonly router: Router,
+  constructor(
+    private readonly router: Router,
     private readonly webSocketService: WebsocketService,
     private readonly toastService: ToastService
   ) {}
@@ -22,25 +23,26 @@ export class HomePage {
     this.router.navigate(['/create-room-page']);
   }
 
+  
   async goToJoinRoom() {
-    const board = await this.webSocketService.getBoard();
-    if(board?.table){
+    const gameStarted = await this.webSocketService.startedGameStatus();
+    if(gameStarted){
       this.router.navigate(['/game'],{queryParams: { turn: 2 }})
     }
     else{
-      this.toastService.createToast("no encontrado", 'error')
+      this.toastService.createToast("Room not created", 'warning')
     }
-    // this.router.navigate(['/join-room-page']);
   }
 
+
   async goToJoinAsSpectator() {
-    const board = await this.webSocketService.getBoard();
-    if(board?.table){
+    const gameStarted = await this.webSocketService.startedGameStatus();
+    if(gameStarted){
       this.router.navigate(['/game'],{queryParams: { turn: 0 }})
       this.toastService.createToast("Modo spectator actived", 'success')
     }
     else{
-      this.toastService.createToast("no encontrado", 'error')
+      this.toastService.createToast("Room not created", 'error')
     }
   }
 }
