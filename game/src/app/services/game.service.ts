@@ -196,58 +196,11 @@ export class GameService {
     }
   }
 
-  // async incrementMinesOpened(
-  //   player: number,
-  //   currentScores: { [key: number]: scoreBoard }
-  // ): Promise<void> {
-  //   const scores = currentScores[player];
-  //   scores.minesOpen++;
-  //   await this.updatePlayerScores(player, scores);
-  // }
-
-  // async incrementFlagsSet(
-  //   player: number,
-  //   currentScores: { [key: number]: scoreBoard }
-  // ): Promise<void> {
-  //   const scores = currentScores[player];
-  //   scores.flagSets++;
-  //   await this.updatePlayerScores(player, scores);
-  // }
-
-  // async handleGameEnd(
-  //   player: number,
-  //   hitMine: boolean,
-  //   currentScores: { [key: number]: scoreBoard }
-  // ): Promise<void> {
-  //   const scores = currentScores[player];
-  //   scores.gameOver = true;
-
-  //   if (hitMine) {
-  //     this.toastService.createToast(
-  //       `¡Jugador ${player} golpeó una mina!`,
-  //       'danger'
-  //     );
-  //   } else {
-  //     this.toastService.createToast(
-  //       `¡Jugador ${player} completó el tablero!`,
-  //       'success'
-  //     );
-  //   }
-
-  //   await this.updatePlayerScores(player, scores);
-  // }
-
   onScoresUpdate(
     callback: (scores: { [key: number]: scoreBoard }) => void
   ): void {
     this.websocketService.listenForScoreUpdates(callback);
   }
-
-  // onInitialScores(
-  //   callback: (scores: { [key: number]: scoreBoard }) => void
-  // ): void {
-  //   this.websocketService.listenForInitialScores(callback);
-  // }
 
   async resetAllScores(): Promise<boolean> {
     try {
