@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle,
+import { IonContent, IonButton, IonCard, IonTitle, IonButtons,
   IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
@@ -16,7 +16,7 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./game.page.scss'],
   standalone: true,
   imports: [
-    IonContent, CommonModule, FormsModule,
+    IonContent, CommonModule, FormsModule, IonButtons,
     IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
   ],
 })
@@ -27,8 +27,7 @@ export class GamePage implements OnInit {
   playerTwoStats: scoreBoard = new scoreBoard();
   activeFlagMode: boolean = false;
   player: number = 0;
-  finishModal: boolean = false;
-  showGameOverAlert: boolean = false;
+  finishModal: boolean = true;
   winner: number | null = null;
 
   constructor(
@@ -213,7 +212,6 @@ export class GamePage implements OnInit {
 
 
   gameOverEvent() {
-    this.showGameOverAlert = true;
     this.finishModal = true;
 
     if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
@@ -264,7 +262,6 @@ export class GamePage implements OnInit {
 
       this.statusGame = new StatusGameDto();
       this.finishModal = false;
-      this.showGameOverAlert = false;
       this.winner = null;
       this.activeFlagMode = false;
       await this.gameService.resetAllScores();
@@ -288,8 +285,8 @@ export class GamePage implements OnInit {
 
   
   getGameOverMessage(): string {
-    if (this.winner === 1) return '¡Jugador 1 ha ganado!';
-    if (this.winner === 2) return '¡Jugador 2 ha ganado!';
-    return '¡El juego ha terminado en empate!';
+    if (this.winner === 1) return 'Player one wins!';
+    if (this.winner === 2) return 'Player two wins!';
+    return 'Draw!';
   }
 }

@@ -78,26 +78,26 @@
     <ng-template>
       <ion-header>
         <ion-toolbar color="primary">
-          <ion-title class="end-title">¡Fin del juego!</ion-title>
+          <ion-title class="end-title">Game Over</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
+      <ion-content class="scoreboard-container">
         <p class="winner-message">{{ getGameOverMessage() }}</p>
 
-        <ion-card>
-          <div class="ion-padding">
-            <h2>Estadísticas Finales</h2>
+        <ion-card class="card-container">
+          <div>
+            <h2>Final Statistics</h2>
 
             <p>
-              <strong>Jugador 1</strong><br />
-              Celdas abiertas: {{ playerOneStats.minesOpen }}<br />
-              Banderas correctas: {{ playerOneStats.correctFlags }}
+              <strong>Player 1</strong><br />
+              Open cells: {{ playerOneStats.minesOpen }}<br />
+              Correct flags: {{ playerOneStats.correctFlags }}
             </p>
 
             <p>
-              <strong>Jugador 2</strong><br />
-              Celdas abiertas: {{ playerTwoStats.minesOpen }}<br />
-              Banderas correctas: {{ playerTwoStats.correctFlags }}
+              <strong>Player 2</strong><br />
+              Open cells: {{ playerTwoStats.minesOpen }}<br />
+              Correct flags: {{ playerTwoStats.correctFlags }}
             </p>
           </div>
         </ion-card>

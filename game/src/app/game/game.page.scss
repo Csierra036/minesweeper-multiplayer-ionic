@@ -129,14 +129,17 @@
   margin-top: 70px;
 }
 
-/* Contenedor del marcador */
-.score-board {
-  display: flex;
-  gap: 10px;
-}
 
 /* Texto del modal de fin de juego */
 .end-title {
   text-align: center;
   font-size: 15px;
+}
+
+.scoreboard-container{
+  text-align: center;
+}
+
+.card-container{
+  margin-top: 100px;
 }
