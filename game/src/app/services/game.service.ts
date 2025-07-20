@@ -82,7 +82,7 @@ export class GameService {
       player = 2;
       this.toastService.createToast("Player 2's turn", 'info');
     }
-    if (player === 2) {
+    else if (player === 2) {
       player = 1;
       this.toastService.createToast("Player 1's turn", 'info');
     }
