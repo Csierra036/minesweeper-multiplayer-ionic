@@ -151,6 +151,7 @@ export class GamePage implements OnInit {
             'The cell does not have your flag',
             'warning'
           );
+          return; // Salir si no se puede colocar bandera
         }
       } else {
         const cell = this.statusGame.boardGame.table[row][col];
@@ -182,9 +183,18 @@ export class GamePage implements OnInit {
             'There is a flag in this cell',
             'warning'
           );
+          return; // Salir si hay bandera
         }
       }
 
+      // Verificar condición de victoria después de cada movimiento exitoso
+      if (this.boardCleared()) {
+        this.statusGame.boardGame.gameOver = true;
+        this.gameOverEvent();
+        return;
+      }
+
+      // Verificar si el juego terminó por otras razones
       if (this.statusGame.boardGame.gameOver) {
         this.gameOverEvent();
       }
@@ -193,6 +203,7 @@ export class GamePage implements OnInit {
       console.error('Error in openCellOnBoard:', error);
     }
   }
+
   async updateFlagCount(flagNumber: number = 1) {
     if (this.player === 1) {
       this.playerOneStats.flagSets += flagNumber;
@@ -231,9 +242,23 @@ export class GamePage implements OnInit {
     }
   }
 
+  private boardCleared(): boolean {
+    const board = this.statusGame.boardGame.table;
+    for (const row of board) {
+      for (const cell of row) {
+        // Si hay una celda segura sin revelar O una mina sin bandera → el tablero no está completo
+        if ((!cell.mine && !cell.revelated) || (cell.mine && cell.flag === 0)) {
+          return false;
+        }
+      }
+    }
+    return true; // Todas las celdas seguras reveladas y minas marcadas
+  }
+
   gameOverEvent() {
     this.finishModal = true;
 
+    // Caso 1: Derrota por mina (prioridad máxima)
     if (this.playerOneStats.hitMine) {
       this.winner = 2;
       return;
@@ -243,18 +268,28 @@ export class GamePage implements OnInit {
       return;
     }
 
-    if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
-      this.winner = 1;
-    } else if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen) {
-      this.winner = 2;
-    } else {
-      if (this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags) {
+    // Caso 2: Victoria por completar el tablero
+    if (this.boardCleared()) {
+      // Desempate 1: Más celdas descubiertas
+      if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
+        this.winner = 1;
+      } else if (
+        this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen
+      ) {
+        this.winner = 2;
+      }
+      // Desempate 2: Más banderas correctas
+      else if (
+        this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags
+      ) {
         this.winner = 1;
       } else if (
         this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags
       ) {
         this.winner = 2;
-      } else {
+      }
+      // Empate total
+      else {
         this.winner = null;
       }
     }
