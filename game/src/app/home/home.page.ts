@@ -32,4 +32,15 @@ export class HomePage {
     }
     // this.router.navigate(['/join-room-page']);
   }
+
+  async goToJoinAsSpectator() {
+    const board = await this.webSocketService.getBoard();
+    if(board?.table){
+      this.router.navigate(['/game'],{queryParams: { turn: 0 }})
+      this.toastService.createToast("Modo spectator actived", 'success')
+    }
+    else{
+      this.toastService.createToast("no encontrado", 'error')
+    }
+  }
 }

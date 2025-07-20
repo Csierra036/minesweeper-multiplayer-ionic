@@ -1,5 +1,5 @@
 .title{
-  margin-top: 100px;
+  margin-top: 80px;
   text-align: center;
   color: #fff;
   text-shadow: 0 0 4px black,
@@ -16,7 +16,7 @@
   font-size: 8px;
 }
 .center-buttons {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,14 +25,7 @@
 }
 
 ion-button{
-  margin-top: 50px;
-  // --background: #a0673e;
-  // --background-hover: #8B4513; /* un marrón más oscuro para hover */
-  // --background-activated: #A0522D;
-  // box-shadow: 0 0 7px rgb(102, 57, 6),
-  //             0 0 7px  rgb(102, 57, 6),
-  //             0 0 7px rgb(102, 57, 6),
-  //             0 0 7px  rgb(102, 57, 6);
+  margin-top: 18px;
 }
 
 ion-content {

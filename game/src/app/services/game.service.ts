@@ -100,7 +100,7 @@ export class GameService {
 
     if (cell.mine) {
       gameStatus.boardGame.gameOver = true;
-      this.toastService.createToast('¡Has perdido!', 'danger');
+      this.toastService.createToast('You lose!', 'danger');
     }
 
     this.websocketService.sendTurnGame(gameStatus);
@@ -181,16 +181,9 @@ export class GameService {
   async updatePlayerScores(player: number, scores: scoreBoard): Promise<boolean> {
     try {
       const success = await this.websocketService.updateScores(player, scores);
-      if (success) {
-        this.toastService.createToast('Marcador actualizado', 'success');
-      } else {
-        this.toastService.createToast(
-          'Error al actualizar marcador',
-          'warning'
-        );
-      }
       return success;
-    } catch (error) {
+    }
+    catch (error) {
       this.toastService.createToast(
         'Error de conexión al actualizar marcador',
         'danger'
@@ -203,7 +196,8 @@ export class GameService {
   async getCurrentScores(): Promise<{ [key: number]: scoreBoard }> {
     try {
       return await this.websocketService.getCurrentScores();
-    } catch (error) {
+    }
+    catch (error) {
       this.toastService.createToast('Error al obtener marcadores', 'warning');
       return {
         1: new scoreBoard(),
