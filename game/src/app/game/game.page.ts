@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle,
-  IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonButton,
+  IonCard,
+  IonTitle,
+  IonHeader,
+  IonToolbar,
+  IonModal,
+} from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -16,11 +23,17 @@ import { ToastService } from '../services/toast.service';
   styleUrls: ['./game.page.scss'],
   standalone: true,
   imports: [
-    IonContent, CommonModule, FormsModule,
-    IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
+    IonContent,
+    CommonModule,
+    FormsModule,
+    IonButton,
+    IonCard,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonModal,
   ],
 })
-
 export class GamePage implements OnInit {
   statusGame: StatusGameDto = new StatusGameDto();
   playerOneStats: scoreBoard = new scoreBoard();
@@ -76,7 +89,6 @@ export class GamePage implements OnInit {
     this.updateScores(currentScores);
   }
 
-
   get boardSizeClass(): string {
     const cols = this.statusGame.boardGame?.size || 0;
 
@@ -87,7 +99,6 @@ export class GamePage implements OnInit {
     return 'board-10';
   }
 
-
   /**
    * Updates local scores with server data
    * @param scores - Object that manages players' scores
@@ -96,22 +107,21 @@ export class GamePage implements OnInit {
     if (scores[1]) {
       this.playerOneStats.minesOpen = scores[1].minesOpen;
       this.playerOneStats.flagSets = scores[1].flagSets;
-      this.playerOneStats.correctFlags = scores[1].correctFlags; // <-- AGREGAR ESTA LÍNEA
-      this.playerOneStats.gameOver = scores[1].gameOver;
+      this.playerOneStats.correctFlags = scores[1].correctFlags;
+      this.playerOneStats.hitMine = scores[1].hitMine;
       this.playerOneStats.turn = scores[1].turn;
     }
     if (scores[2]) {
       this.playerTwoStats.minesOpen = scores[2].minesOpen;
       this.playerTwoStats.flagSets = scores[2].flagSets;
-      this.playerTwoStats.correctFlags = scores[2].correctFlags; // <-- AGREGAR ESTA LÍNEA
-      this.playerTwoStats.gameOver = scores[2].gameOver;
+      this.playerTwoStats.correctFlags = scores[2].correctFlags;
+      this.playerTwoStats.hitMine = scores[2].hitMine;
       this.playerTwoStats.turn = scores[2].turn;
     }
   }
 
-
   async openCellOnBoard(row: number, col: number) {
-    if(this.player == 0) return;
+    if (this.player == 0) return;
 
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
@@ -129,57 +139,68 @@ export class GamePage implements OnInit {
           if (cell.mine) {
             await this.updateCorrectFlagsCount(-1);
           }
-        }
-
-        else if (!cell.flag) {
+        } else if (!cell.flag) {
           this.gameService.setFlagOnBoard(row, col, this.statusGame);
           await this.updateFlagCount(1);
 
           if (cell.mine) {
             await this.updateCorrectFlagsCount(1);
           }
-        }
-
-        else {
+        } else {
           this.toastService.createToast(
             'The cell does not have your flag',
             'warning'
           );
         }
-      }
-
-      else {
+      } else {
         const cell = this.statusGame.boardGame.table[row][col];
         if (!cell.flag) {
-          const cellsOpened = this.gameService.openCellOnBoard(row, col, this.statusGame);
-          if (cellsOpened) await this.updateMinesCount(cellsOpened);
-        }
-        else {
-          this.toastService.createToast('There is a flag in this cell', 'warning');
+          const cellsOpened = this.gameService.openCellOnBoard(
+            row,
+            col,
+            this.statusGame
+          );
+
+          if (cellsOpened) {
+            await this.updateMinesCount(cellsOpened);
+          }
+
+          if (cell.mine) {
+            if (this.player === 1) {
+              this.playerOneStats.hitMine = true;
+            } else {
+              this.playerTwoStats.hitMine = true;
+            }
+            await this.syncScores();
+
+            this.statusGame.boardGame.gameOver = true;
+            this.gameOverEvent();
+            return;
+          }
+        } else {
+          this.toastService.createToast(
+            'There is a flag in this cell',
+            'warning'
+          );
         }
       }
 
-      if (this.statusGame.boardGame.gameOver){
-        this.gameOverEvent()
-      };
-    }
-    
-    catch (error) {
+      if (this.statusGame.boardGame.gameOver) {
+        this.gameOverEvent();
+      }
+    } catch (error) {
       this.toastService.createToast('Error when making a move', 'danger');
+      console.error('Error in openCellOnBoard:', error);
     }
   }
-
-
   async updateFlagCount(flagNumber: number = 1) {
     if (this.player === 1) {
       this.playerOneStats.flagSets += flagNumber;
-    }
-    else {
+    } else {
       this.playerTwoStats.flagSets += flagNumber;
     }
     await this.syncScores();
   }
-
 
   async updateCorrectFlagsCount(delta: number = 1) {
     if (this.player === 1) {
@@ -190,7 +211,6 @@ export class GamePage implements OnInit {
     await this.syncScores();
   }
 
-  
   async updateMinesCount(cellsOpened: number) {
     if (this.player === 1) {
       this.playerOneStats.minesOpen += cellsOpened;
@@ -200,45 +220,48 @@ export class GamePage implements OnInit {
     await this.syncScores();
   }
 
-
   async syncScores() {
     try {
       await this.gameService.updatePlayerScores(
         this.player,
         this.player === 1 ? this.playerOneStats : this.playerTwoStats
       );
-    }
-    catch (error) {
+    } catch (error) {
       this.toastService.createToast('Error updating score', 'danger');
     }
   }
 
-
   gameOverEvent() {
     this.finishModal = true;
 
+    if (this.playerOneStats.hitMine) {
+      this.winner = 2;
+      return;
+    }
+    if (this.playerTwoStats.hitMine) {
+      this.winner = 1;
+      return;
+    }
+
     if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
       this.winner = 1;
-    }
-    if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen) {
+    } else if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen) {
       this.winner = 2;
-    }
-    else{
-      if (this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags){
+    } else {
+      if (this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags) {
         this.winner = 1;
-      } 
-      if (this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags){
+      } else if (
+        this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags
+      ) {
         this.winner = 2;
-      }
-      else {
-        this.winner = null; // Tie
+      } else {
+        this.winner = null;
       }
     }
   }
 
-
   activateFlagMode() {
-    if(this.player === 0) return;
+    if (this.player === 0) return;
 
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
@@ -247,11 +270,9 @@ export class GamePage implements OnInit {
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
 
-
-
   desactivateFlagMode() {
-    console.log(this.player)
-    if(this.player === 0) return;
+    console.log(this.player);
+    if (this.player === 0) return;
 
     if (this.statusGame.turnGame !== this.player) {
       this.toastService.createToast("It's not your turn", 'warning');
@@ -262,9 +283,8 @@ export class GamePage implements OnInit {
     );
   }
 
-
   async restartGame() {
-    if(this.player === 0) return;
+    if (this.player === 0) return;
 
     try {
       this.playerOneStats.resetScoreBoard();
@@ -275,26 +295,29 @@ export class GamePage implements OnInit {
       this.winner = null;
       this.activeFlagMode = false;
       await this.gameService.resetAllScores();
-      
+
       const board = await this.gameService.getBoard(this.statusGame.boardGame);
       if (board) {
         this.statusGame.boardGame = board;
       }
 
       this.toastService.createToast('Game restarted', 'success');
-    }
-    catch (error) {
+    } catch (error) {
       this.toastService.createToast('Error when restarting game', 'danger');
     }
   }
-
 
   exitGame() {
     this.finishModal = false;
   }
 
-  
   getGameOverMessage(): string {
+    if (this.playerOneStats.hitMine) {
+      return 'Player 1 hit a mine! Player 2 wins!';
+    }
+    if (this.playerTwoStats.hitMine) {
+      return 'Player 2 hit a mine! Player 1 wins!';
+    }
     if (this.winner === 1) return 'Player one wins!';
     if (this.winner === 2) return 'Player two wins!';
     return 'Draw!';

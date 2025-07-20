@@ -2,14 +2,14 @@ export class scoreBoard {
   minesOpen: number;
   flagSets: number;
   correctFlags: number = 0;
-  gameOver: boolean;
+  hitMine: boolean;
   turn: boolean;
 
   constructor() {
     this.minesOpen = 0;
     this.flagSets = 0;
     this.correctFlags = 0;
-    this.gameOver = false;
+    this.hitMine = false;
     this.turn = false;
   }
 
@@ -17,6 +17,6 @@ export class scoreBoard {
     this.minesOpen = 0;
     this.correctFlags = 0;
     this.flagSets = 0;
-    this.gameOver = false;
+    this.hitMine = false;
   }
 }
