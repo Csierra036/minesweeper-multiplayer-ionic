@@ -14,6 +14,7 @@ export class GameService {
     private readonly websocketService: WebsocketService
   ) {}
 
+
   async connectToServer(serverIp: string, serverPort: string) {
     let success = false;
     try {
@@ -37,6 +38,7 @@ export class GameService {
     return false;
   }
 
+
   async sendCreatedBoard(boardGame: Board): Promise<boolean> {
     let success = false;
     try {
@@ -53,6 +55,7 @@ export class GameService {
     this.toastService.createToast('Error creating room', 'danger');
     return false;
   }
+
 
   async getBoard(board: Board): Promise<Board | null> {
     try {
@@ -72,6 +75,7 @@ export class GameService {
     }
   }
 
+  
   rotateRound(player: number): number {
     if (player === 1) {
       player = 2;
@@ -82,6 +86,7 @@ export class GameService {
     }
     return player;
   }
+
 
   openCellOnBoard(
     row: number,
@@ -104,6 +109,7 @@ export class GameService {
     return cellsOpened;
   }
 
+
   setFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto): void {
     const cell = gameStatus.boardGame.table[row][col];
     if (gameStatus.boardGame.gameOver) return;
@@ -120,6 +126,7 @@ export class GameService {
       );
     }
   }
+
 
   removeFlagOnBoard(row: number, col: number, gameStatus: StatusGameDto) {
     const cell = gameStatus.boardGame.table[row][col];
@@ -138,6 +145,7 @@ export class GameService {
     }
   }
 
+
   activeFlagMode(flagMode: boolean): boolean {
     if (flagMode) {
       this.toastService.createToast(
@@ -150,6 +158,7 @@ export class GameService {
     }
     return flagMode;
   }
+
 
   desactiveFlagMode(flagMode: boolean): boolean {
     if (!flagMode) {
@@ -164,9 +173,11 @@ export class GameService {
     return flagMode;
   }
 
+
   onGameStatusUpdate(callback: (status: StatusGameDto) => void): void {
     this.websocketService.listenGameStatusUpdate(callback);
   }
+
 
   async updatePlayerScores(
     player: number,
@@ -184,6 +195,7 @@ export class GameService {
     }
   }
 
+
   async getCurrentScores(): Promise<{ [key: number]: scoreBoard }> {
     try {
       return await this.websocketService.getCurrentScores();
@@ -196,11 +208,13 @@ export class GameService {
     }
   }
 
+
   onScoresUpdate(
     callback: (scores: { [key: number]: scoreBoard }) => void
   ): void {
     this.websocketService.listenForScoreUpdates(callback);
   }
+
 
   async resetAllScores(): Promise<boolean> {
     try {
@@ -215,5 +229,10 @@ export class GameService {
       this.toastService.createToast('Error resetting scoreboards', 'danger');
       return false;
     }
+  }
+
+
+  async finishGame(){
+    await this.websocketService.sendEndGameStatus();
   }
 }
