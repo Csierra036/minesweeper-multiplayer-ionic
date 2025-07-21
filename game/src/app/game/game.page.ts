@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle,
-  IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonButton,
+  IonCard,
+  IonTitle,
+  IonHeader,
+  IonToolbar,
+  IonModal,
+} from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -17,9 +24,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./game.page.scss'],
   standalone: true,
   imports: [
-    IonContent, CommonModule, FormsModule,
-    IonButton, IonCard, IonTitle, IonToolbar, IonHeader,
-    IonModal
+    IonContent,
+    CommonModule,
+    FormsModule,
+    IonButton,
+    IonCard,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonModal,
   ],
 })
 export class GamePage implements OnInit {
@@ -35,7 +48,7 @@ export class GamePage implements OnInit {
     private readonly gameService: GameService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly toastService: ToastService,
+    private readonly toastService: ToastService
   ) {
     this.playerOneStats.turn = true; // The game starting with the player 1
   }
@@ -63,7 +76,7 @@ export class GamePage implements OnInit {
       this.playerOneStats.turn = status.turnGame === 1;
       this.playerTwoStats.turn = status.turnGame === 2;
 
-      if (this.statusGame.boardGame.gameOver) {
+      if (this.statusGame.boardGame.gameOver && !this.finishModal) {
         this.gameOverEvent();
       }
     });
@@ -78,7 +91,6 @@ export class GamePage implements OnInit {
     this.updateScores(currentScores);
   }
 
-
   get boardSizeClass(): string {
     const cols = this.statusGame.boardGame?.size || 0;
 
@@ -88,7 +100,6 @@ export class GamePage implements OnInit {
     if (cols >= 27 && cols <= 32) return 'board-12';
     return 'board-10';
   }
-
 
   /**
    * Updates local scores with server data
@@ -110,7 +121,6 @@ export class GamePage implements OnInit {
       this.playerTwoStats.turn = scores[2].turn;
     }
   }
-
 
   async openCellOnBoard(row: number, col: number) {
     if (this.player == 0) return;
@@ -194,7 +204,6 @@ export class GamePage implements OnInit {
     }
   }
 
-
   async updateFlagCount(flagNumber: number = 1) {
     if (this.player === 1) {
       this.playerOneStats.flagSets += flagNumber;
@@ -203,7 +212,6 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
-
 
   async updateCorrectFlagsCount(delta: number = 1) {
     if (this.player === 1) {
@@ -214,7 +222,6 @@ export class GamePage implements OnInit {
     await this.syncScores();
   }
 
-
   async updateMinesCount(cellsOpened: number) {
     if (this.player === 1) {
       this.playerOneStats.minesOpen += cellsOpened;
@@ -223,7 +230,6 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
-
 
   async syncScores() {
     try {
@@ -235,7 +241,6 @@ export class GamePage implements OnInit {
       this.toastService.createToast('Error updating score', 'danger');
     }
   }
-
 
   boardCleared(): boolean {
     const board = this.statusGame.boardGame.table;
@@ -249,10 +254,12 @@ export class GamePage implements OnInit {
     return true;
   }
 
-
   async gameOverEvent() {
+    this.statusGame.boardGame.gameOver = true;
+
+    // 🚀 Envía el estado final del tablero al backend
+    await this.gameService.sendGameStatus(this.statusGame);
     this.finishModal = true;
-    await this.gameService.finishGame();
 
     if (this.playerOneStats.hitMine) {
       this.winner = 2;
@@ -284,7 +291,6 @@ export class GamePage implements OnInit {
     }
   }
 
-
   activateFlagMode() {
     if (this.player === 0) return;
 
@@ -294,7 +300,6 @@ export class GamePage implements OnInit {
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
-
 
   desactivateFlagMode() {
     console.log(this.player);
@@ -308,7 +313,6 @@ export class GamePage implements OnInit {
       this.activeFlagMode
     );
   }
-
 
   async restartGame() {
     try {
@@ -327,13 +331,11 @@ export class GamePage implements OnInit {
     }
   }
 
-
   async exitGame() {
     this.finishModal = false;
     await this.gameService.resetAllScores();
     this.router.navigate(['/home']);
   }
-
 
   getGameOverMessage(): string {
     if (this.playerOneStats.hitMine) {

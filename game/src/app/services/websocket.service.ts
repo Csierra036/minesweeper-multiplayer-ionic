@@ -30,7 +30,6 @@ export class WebsocketService {
     });
   }
 
-
   startedGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('checkStartedGame', (status: boolean) => {
@@ -42,7 +41,6 @@ export class WebsocketService {
       }, 5000);
     });
   }
-
 
   sendStartedGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -56,20 +54,6 @@ export class WebsocketService {
     });
   }
 
-
-  sendEndGameStatus(): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.socket.emit('saveStartedGame', false, (ackResponse: boolean) => {
-        resolve(ackResponse);
-      });
-
-      setTimeout(() => {
-        resolve(false);
-      }, 5000);
-    });
-  }
-
-
   sendCreatedBoard(boardGame: Board): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('saveCreateBoard', boardGame, (ackResponse: boolean) => {
@@ -81,7 +65,6 @@ export class WebsocketService {
       }, 5000);
     });
   }
-
 
   getBoard(): Promise<Board | null> {
     return new Promise((resolve) => {
@@ -95,7 +78,6 @@ export class WebsocketService {
     });
   }
 
-  
   sendTurnGame(statusGame: StatusGameDto): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('followGameStatus', statusGame, (ack: boolean) => {
@@ -108,11 +90,9 @@ export class WebsocketService {
     });
   }
 
-
   listenGameStatusUpdate(callback: (statusGame: StatusGameDto) => void): void {
     this.socket.on('statusGame', callback);
   }
-
 
   updateScores(player: number, scores: scoreBoard): Promise<boolean> {
     return new Promise((resolve) => {
@@ -126,7 +106,6 @@ export class WebsocketService {
     });
   }
 
-  
   getCurrentScores(): Promise<{ [key: number]: scoreBoard }> {
     return new Promise((resolve) => {
       this.socket.emit('getScores', (scores: { [key: number]: scoreBoard }) => {
@@ -142,12 +121,20 @@ export class WebsocketService {
     });
   }
 
-  
-  listenForScoreUpdates(callback: (scores: { [key: number]: scoreBoard }) => void): void {
+  listenForScoreUpdates(
+    callback: (scores: { [key: number]: scoreBoard }) => void
+  ): void {
     this.socket.on('scoresUpdated', callback);
   }
 
+<<<<<<< Updated upstream
   
+=======
+  // listenForInitialScores(callback: (scores: { [key: number]: scoreBoard }) => void): void {
+  //   this.socket.on('initialScores', callback);
+  // }
+
+>>>>>>> Stashed changes
   resetScores(): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('resetScores', (ack: boolean) => {
@@ -159,7 +146,6 @@ export class WebsocketService {
       }, 5000);
     });
   }
-
 
   disconnect(): void {
     if (this.socket) {
