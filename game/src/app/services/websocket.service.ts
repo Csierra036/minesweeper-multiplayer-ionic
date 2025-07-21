@@ -30,6 +30,7 @@ export class WebsocketService {
     });
   }
 
+
   startedGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('checkStartedGame', (status: boolean) => {
@@ -41,6 +42,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   sendStartedGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -54,6 +56,7 @@ export class WebsocketService {
     });
   }
 
+
   sendCreatedBoard(boardGame: Board): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('saveCreateBoard', boardGame, (ackResponse: boolean) => {
@@ -66,6 +69,7 @@ export class WebsocketService {
     });
   }
 
+  
   getBoard(): Promise<Board | null> {
     return new Promise((resolve) => {
       this.socket.emit('getBoard', (board: Board | null) => {
@@ -77,6 +81,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   sendTurnGame(statusGame: StatusGameDto): Promise<boolean> {
     return new Promise((resolve) => {
@@ -90,9 +95,11 @@ export class WebsocketService {
     });
   }
 
+
   listenGameStatusUpdate(callback: (statusGame: StatusGameDto) => void): void {
     this.socket.on('statusGame', callback);
   }
+
 
   updateScores(player: number, scores: scoreBoard): Promise<boolean> {
     return new Promise((resolve) => {
@@ -105,6 +112,7 @@ export class WebsocketService {
       }, 5000);
     });
   }
+
 
   getCurrentScores(): Promise<{ [key: number]: scoreBoard }> {
     return new Promise((resolve) => {
@@ -121,9 +129,8 @@ export class WebsocketService {
     });
   }
 
-  listenForScoreUpdates(
-    callback: (scores: { [key: number]: scoreBoard }) => void
-  ): void {
+
+  listenForScoreUpdates(callback: (scores: { [key: number]: scoreBoard }) => void): void {
     this.socket.on('scoresUpdated', callback);
   }
 
@@ -138,11 +145,5 @@ export class WebsocketService {
         resolve(false);
       }, 5000);
     });
-  }
-
-  disconnect(): void {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
   }
 }

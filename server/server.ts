@@ -25,11 +25,13 @@ server.on("connection", (socket) => {
 
   socket.emit("initialScores", playerScores);
 
+
   socket.on("saveCreateBoard", (board, callback) => {
     console.log("Tablero recibido:", board);
     boardTable = board;
     callback(true);
   });
+
 
   socket.on("getBoard", (callback) => {
     if (boardTable) {
@@ -39,31 +41,35 @@ server.on("connection", (socket) => {
     }
   });
 
+
   socket.on("checkStartedGame", (callback) => {
     callback(gameStarted);
   });
+
 
   socket.on("saveStartedGame", (status, callback) => {
     gameStarted = status;
     callback(true);
   });
 
+
   socket.on("followGameStatus", (status, callback) => {
     if (status) {
       gameStatus = status;
 
-      // Si el cliente marca gameOver, propaga a todos inmediatamente
       if (gameStatus.boardGame && gameStatus.boardGame.gameOver) {
-        console.log("Juego terminado, notificando a todos los clientes.");
+        console.log("Finished game");
       }
 
-      server.emit("statusGame", gameStatus); // 🚀 Propaga el estado a todos
+      server.emit("statusGame", status);
       callback(true);
-    } else {
+    }
+    else {
       callback(null);
     }
   });
 
+  
   socket.on("updateScores", (player: number, scores: scoreBoard, callback) => {
     if (player === 1 || player === 2) {
       playerScores[player] = scores;
@@ -74,14 +80,17 @@ server.on("connection", (socket) => {
 
       server.emit("scoresUpdated", playerScores);
       callback(true);
-    } else {
+    }
+    else {
       callback(false);
     }
   });
 
+
   socket.on("getScores", (callback) => {
     callback(playerScores);
   });
+
 
   socket.on("resetScores", (callback) => {
     playerScores = {
@@ -92,10 +101,12 @@ server.on("connection", (socket) => {
     callback(true);
   });
 
+
   socket.on("disconnect", () => {
     console.log("Cliente desconectado:", socket.id);
   });
 });
+
 
 httpsServer.listen(8181, "0.0.0.0", () => {
   console.log("Servidor Socket.io escuchando en puerto 8181");
