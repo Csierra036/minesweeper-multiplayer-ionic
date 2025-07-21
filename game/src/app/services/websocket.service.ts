@@ -46,8 +46,8 @@ export class WebsocketService {
 
   sendStartedGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('saveStartedGame', true, (ackResponse: boolean) => {
-        resolve(ackResponse);
+      this.socket.emit('saveStartedGame', true, (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
@@ -59,8 +59,8 @@ export class WebsocketService {
   
   sendEndGameStatus(): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('saveStartedGame', false, (ackResponse: boolean) => {
-        resolve(ackResponse);
+      this.socket.emit('saveStartedGame', false, (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
@@ -72,8 +72,8 @@ export class WebsocketService {
 
   sendCreatedBoard(boardGame: Board): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('saveCreateBoard', boardGame, (ackResponse: boolean) => {
-        resolve(ackResponse);
+      this.socket.emit('saveCreateBoard', boardGame, (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
@@ -98,8 +98,8 @@ export class WebsocketService {
 
   sendTurnGame(statusGame: StatusGameDto): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('followGameStatus', statusGame, (ack: boolean) => {
-        resolve(ack);
+      this.socket.emit('followGameStatus', statusGame, (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
@@ -109,15 +109,15 @@ export class WebsocketService {
   }
 
 
-  listenGameStatusUpdate(callback: (statusGame: StatusGameDto) => void): void {
+  listenGameStatusUpdate(callback: (statusGame: StatusGameDto) => void){
     this.socket.on('statusGame', callback);
   }
 
 
   updateScores(player: number, scores: scoreBoard): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('updateScores', player, scores, (ack: boolean) => {
-        resolve(ack);
+      this.socket.emit('updateScores', player, scores, (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
@@ -143,15 +143,15 @@ export class WebsocketService {
   }
 
 
-  listenForScoreUpdates(callback: (scores: { [key: number]: scoreBoard }) => void): void {
+  listenForScoreUpdates(callback: (scores: { [key: number]: scoreBoard }) => void){
     this.socket.on('scoresUpdated', callback);
   }
 
   
   resetScores(): Promise<boolean> {
     return new Promise((resolve) => {
-      this.socket.emit('resetScores', (ack: boolean) => {
-        resolve(ack);
+      this.socket.emit('resetScores', (response: boolean) => {
+        resolve(response);
       });
 
       setTimeout(() => {
