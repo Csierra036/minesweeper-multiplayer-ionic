@@ -127,14 +127,7 @@ export class WebsocketService {
     this.socket.on('scoresUpdated', callback);
   }
 
-<<<<<<< Updated upstream
   
-=======
-  // listenForInitialScores(callback: (scores: { [key: number]: scoreBoard }) => void): void {
-  //   this.socket.on('initialScores', callback);
-  // }
-
->>>>>>> Stashed changes
   resetScores(): Promise<boolean> {
     return new Promise((resolve) => {
       this.socket.emit('resetScores', (ack: boolean) => {
