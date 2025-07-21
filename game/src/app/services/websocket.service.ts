@@ -20,7 +20,7 @@ export class WebsocketService {
       });
 
       this.socket.on('connect', () => {
-        console.log('Socket conectado con ID:', this.socket.id);
+        console.log('Socket connected with ID:', this.socket.id);
         resolve(true);
       });
 
@@ -146,11 +146,6 @@ export class WebsocketService {
   listenForScoreUpdates(callback: (scores: { [key: number]: scoreBoard }) => void): void {
     this.socket.on('scoresUpdated', callback);
   }
-
-  
-  // listenForInitialScores(callback: (scores: { [key: number]: scoreBoard }) => void): void {
-  //   this.socket.on('initialScores', callback);
-  // }
 
   
   resetScores(): Promise<boolean> {

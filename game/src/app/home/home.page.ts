@@ -30,7 +30,7 @@ export class HomePage {
       this.router.navigate(['/game'],{queryParams: { turn: 2 }})
     }
     else{
-      this.toastService.createToast("Room not created", 'warning')
+      this.toastService.createToast("Room not created", 'danger')
     }
   }
 
@@ -42,7 +42,7 @@ export class HomePage {
       this.toastService.createToast("Modo spectator actived", 'success')
     }
     else{
-      this.toastService.createToast("Room not created", 'error')
+      this.toastService.createToast("Room not created", 'danger')
     }
   }
 }

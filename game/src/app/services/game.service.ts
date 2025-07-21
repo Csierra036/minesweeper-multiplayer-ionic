@@ -70,7 +70,7 @@ export class GameService {
       this.toastService.createToast('No board available', 'warning');
       return null;
     } catch (error) {
-      this.toastService.createToast('Server error', 'error');
+      this.toastService.createToast('Server error', 'danger');
       return null;
     }
   }
@@ -79,10 +79,10 @@ export class GameService {
   rotateRound(player: number): number {
     if (player === 1) {
       player = 2;
-      this.toastService.createToast("Player 2's turn", 'info');
+      this.toastService.createToast("Player 2's turn", 'primary');
     } else if (player === 2) {
       player = 1;
-      this.toastService.createToast("Player 1's turn", 'info');
+      this.toastService.createToast("Player 1's turn", 'primary');
     }
     return player;
   }
@@ -121,7 +121,7 @@ export class GameService {
       this.websocketService.sendTurnGame(gameStatus);
     } else {
       this.toastService.createToast(
-        'Ya hay una bandera en esta celda',
+        'There is a flag in this cell',
         'warning'
       );
     }
@@ -139,7 +139,7 @@ export class GameService {
       this.websocketService.sendTurnGame(gameStatus);
     } else {
       this.toastService.createToast(
-        'No puedes quitar la bandera del oponente',
+        "You cannot remove the opponent's flag",
         'warning'
       );
     }
@@ -149,12 +149,12 @@ export class GameService {
   activeFlagMode(flagMode: boolean): boolean {
     if (flagMode) {
       this.toastService.createToast(
-        'El modo bandera ya está activo',
+        'Flag mode is now active',
         'warning'
       );
     } else {
       flagMode = true;
-      this.toastService.createToast('Modo bandera activado', 'success');
+      this.toastService.createToast('Flag mode activated', 'success');
     }
     return flagMode;
   }
@@ -163,12 +163,12 @@ export class GameService {
   desactiveFlagMode(flagMode: boolean): boolean {
     if (!flagMode) {
       this.toastService.createToast(
-        'El modo bandera ya está desactivado',
+        'Flag mode is now disabled',
         'warning'
       );
     } else {
       flagMode = false;
-      this.toastService.createToast('Modo bandera desactivado', 'success');
+      this.toastService.createToast('Flag mode deactivated', 'success');
     }
     return flagMode;
   }
@@ -188,8 +188,8 @@ export class GameService {
       return success;
     } catch (error) {
       this.toastService.createToast(
-        'Error de conexión al actualizar marcador',
-        'danger'
+        'Connection error when updating marker',
+        'warning'
       );
       return false;
     }
@@ -200,7 +200,7 @@ export class GameService {
     try {
       return await this.websocketService.getCurrentScores();
     } catch (error) {
-      this.toastService.createToast('Error al obtener marcadores', 'warning');
+      this.toastService.createToast('Error obtaining markers', 'warning');
       return {
         1: new scoreBoard(),
         2: new scoreBoard(),
