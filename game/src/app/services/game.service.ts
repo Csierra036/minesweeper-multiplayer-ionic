@@ -216,19 +216,8 @@ export class GameService {
   }
 
 
-  async resetAllScores(): Promise<boolean> {
-    try {
-      const success = await this.websocketService.resetScores();
-      if (success) {
-        this.toastService.createToast('Scoreboards reset', 'success');
-      } else {
-        this.toastService.createToast('Error resetting scoreboards', 'warning');
-      }
-      return success;
-    } catch (error) {
-      this.toastService.createToast('Error resetting scoreboards', 'danger');
-      return false;
-    }
+  async resetAllScores(){
+    await this.websocketService.resetScores();
   }
 
 

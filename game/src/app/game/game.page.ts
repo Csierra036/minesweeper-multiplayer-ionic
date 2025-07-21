@@ -253,7 +253,7 @@ export class GamePage implements OnInit {
   async gameOverEvent() {
     this.finishModal = true;
     await this.gameService.finishGame();
-    
+
     if (this.playerOneStats.hitMine) {
       this.winner = 2;
       return;
@@ -311,8 +311,6 @@ export class GamePage implements OnInit {
 
 
   async restartGame() {
-    if (this.player === 0) return;
-
     try {
       this.playerOneStats.resetScoreBoard();
       this.playerTwoStats.resetScoreBoard();
@@ -323,11 +321,6 @@ export class GamePage implements OnInit {
       this.activeFlagMode = false;
       await this.gameService.resetAllScores();
 
-      const board = await this.gameService.getBoard(this.statusGame.boardGame);
-      if (board) {
-        this.statusGame.boardGame = board;
-      }
-
       this.toastService.createToast('Game restarted', 'success');
     } catch (error) {
       this.toastService.createToast('Error when restarting game', 'danger');
@@ -335,8 +328,9 @@ export class GamePage implements OnInit {
   }
 
 
-  exitGame() {
+  async exitGame() {
     this.finishModal = false;
+    await this.gameService.resetAllScores();
     this.router.navigate(['/home']);
   }
 
