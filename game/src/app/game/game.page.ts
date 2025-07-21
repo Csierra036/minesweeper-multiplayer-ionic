@@ -252,7 +252,7 @@ export class GamePage implements OnInit {
 
   async gameOverEvent() {
     this.statusGame.boardGame.gameOver = true;
-
+    await this.gameService.finishGame();
     await this.gameService.sendGameStatus(this.statusGame);
     this.finishModal = true;
 

@@ -215,7 +215,10 @@ export class GameService {
     await this.websocketService.resetScores();
   }
 
-
+  async finishGame(){
+    await this.websocketService.sendEndGameStatus();
+  }
+  
   async sendGameStatus(statusGame: StatusGameDto){
     await this.websocketService.sendTurnGame(statusGame);
   }

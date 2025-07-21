@@ -55,6 +55,19 @@ export class WebsocketService {
       }, 5000);
     });
   }
+  
+  
+  sendEndGameStatus(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.socket.emit('saveStartedGame', false, (ackResponse: boolean) => {
+        resolve(ackResponse);
+      });
+
+      setTimeout(() => {
+        resolve(false);
+      }, 5000);
+    });
+  }
 
 
   sendCreatedBoard(boardGame: Board): Promise<boolean> {
