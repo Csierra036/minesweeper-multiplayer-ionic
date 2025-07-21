@@ -1,0 +1,19 @@
+<ion-content>
+
+  <ion-title class="join-room-title">
+      Join Room
+  </ion-title>
+
+  <div class="form-content">
+    <form (ngSubmit)="JoinRoom()">
+      <ion-item>
+        <ion-label position="floating">IP</ion-label>
+        <ion-input [(ngModel)]="codeRoom" name="Code room" required></ion-input>
+      </ion-item>
+
+      <div class="save-button">
+        <ion-button expand="block" type="submit">Guardar</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

@@ -1,0 +1,36 @@
+.container-select-mode{
+  margin-top: 50px;
+  color: #fff;
+  text-shadow: 0 0 5px black,
+              0 0 5px black,
+              0 0 5px black,
+              0 0 5px black;
+  
+}
+
+.container-select-mode .select-mode{
+  text-align: center;
+  font-size: 45px;
+}
+
+.mode-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.background {
+  --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
+}
+
+
+.custom-modal-background {
+  --background: white; /* fondo blanco para el modal */
+  --backdrop-opacity: 0.0; /* si quieres quitar el fondo oscuro de fondo */
+  
+}
+
+.small-font{
+  font-size: 15px;
+}

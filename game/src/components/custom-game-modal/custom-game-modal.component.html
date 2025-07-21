@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="modal-title">Settings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="close-button" (click)="cancel()">X</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="settings-container">
+    <div class="setting-group">
+      <ion-label class="setting-label">SIZE</ion-label>
+      <ion-item class="setting-input">
+        <ion-input type="number" [(ngModel)]="size" placeholder="10"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="setting-group">
+      <ion-label class="setting-label">MINES</ion-label>
+      <ion-item class="setting-input">
+        <ion-input type="number" [(ngModel)]="mines" placeholder="10"></ion-input>
+      </ion-item>
+    </div>
+  </div>
+
+  <ion-button class="start-button" expand="block" (click)="confirm()">
+    START GAME
+  </ion-button>
+</ion-content>

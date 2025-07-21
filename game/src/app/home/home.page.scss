@@ -1,0 +1,33 @@
+.title{
+  margin-top: 80px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 4px black,
+              0 0 4px black,
+              0 0 4px black,
+              0 0 4px black;
+}
+
+.main-title{
+  font-size: 28px;
+}
+
+.creators-paragraph{
+  font-size: 8px;
+}
+.center-buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+ion-button{
+  margin-top: 18px;
+}
+
+ion-content {
+  --background: url('src/assets/backgrounds/forest_background.jpg') no-repeat center center / cover;
+}

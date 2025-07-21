@@ -1,0 +1,26 @@
+<ion-content>
+
+  <ion-title class="connect-to-server-title">
+    Connect to Server
+  </ion-title>
+
+  <div class="form-content">
+    <form (ngSubmit)="JoinRoom()">
+      <ion-item>
+        <ion-label position="floating">IP</ion-label>
+        <ion-input [(ngModel)]="serverIp" name="IP" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">PORT</ion-label>
+        <ion-input [(ngModel)]="serverPort" name="PORT" required></ion-input>
+      </ion-item>
+
+      <div class="save-button">
+        <ion-button expand="block" type="submit" fill="clear">
+          <img src="assets/icon/connect_icon.png" alt="10x10" width="200">
+      </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

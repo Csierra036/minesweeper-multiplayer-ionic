@@ -1,0 +1,111 @@
+<ion-content class="background">
+  <!-- Contenedor de los marcadores de ambos jugadores -->
+  <div class="flex-storyboard-container">
+    <div>
+      <ion-title>P1</ion-title>
+      <ion-card class="card-flex-container">
+        Cells: {{ playerOneStats.minesOpen }} <br />
+        Flags: {{ playerOneStats.flagSets }}
+      </ion-card>
+    </div>
+    <div>
+      <ion-title>P2</ion-title>
+      <ion-card class="card-flex-container">
+        Cells: {{ playerTwoStats.minesOpen }} <br />
+        Flags: {{ playerTwoStats.flagSets }}
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Renderizado del tablero de juego -->
+  <div class="board" [ngClass]="boardSizeClass">
+    <div
+      *ngFor="let row of statusGame.boardGame.table; let i = index"
+      class="row"
+    >
+      <div
+        *ngFor="let cell of row; let j = index"
+        class="cell"
+        (click)="openCellOnBoard(i, j)"
+      >
+        <!-- Imagen si la celda está revelada y es mina -->
+        <img
+          *ngIf="cell.revelated && cell.mine"
+          src="assets/icon/bomb.png"
+          alt="Mina"
+          class="mine-image"
+        />
+
+        <!-- Mostrar número si está revelada y no es mina -->
+        <span *ngIf="cell.revelated && !cell.mine">
+          {{ cell.adjacentMines || '' }}
+        </span>
+
+        <!-- Mostrar imagen de bandera según jugador -->
+        <img
+          *ngIf="!cell.revelated && cell.flag === 1"
+          src="assets/icon/player_1_icon.png"
+          alt="Bandera Jugador 1"
+          class="flag-image"
+        />
+        <img
+          *ngIf="!cell.revelated && cell.flag === 2"
+          src="assets/icon/player_2_icon.png"
+          alt="Bandera Jugador 2"
+          class="flag-image"
+        />
+
+        <!-- Celda no revelada sin bandera -->
+        <span *ngIf="!cell.revelated && !cell.flag">🟦</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones para activar/desactivar modo bandera -->
+  <div class="button-container">
+    <ion-button class="btn" (click)="activateFlagMode()" fill="clear">
+      <img src="assets/icon/flag_button_icon.png" alt="flag_icon_button" />
+    </ion-button>
+    <ion-button class="btn" (click)="desactivateFlagMode()" fill="clear">
+      <img src="assets/icon/shovel_button_icon.png" alt="shovel_button_icon" />
+    </ion-button>
+  </div>
+</ion-content>
+
+<!-- Modal personalizado para el fin del juego -->
+<div class="custom-modal-background">
+  <ion-modal [isOpen]="finishModal" (didDismiss)="finishModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title class="end-title">Game Over</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="scoreboard-container">
+        <p class="winner-message">{{ getGameOverMessage() }}</p>
+
+        <ion-card class="card-container">
+          <div>
+            <h2>Final Statistics</h2>
+
+            <p>
+              <strong>Player 1</strong><br />
+              Open cells: {{ playerOneStats.minesOpen }}<br />
+              Correct flags: {{ playerOneStats.correctFlags }}
+            </p>
+
+            <p>
+              <strong>Player 2</strong><br />
+              Open cells: {{ playerTwoStats.minesOpen }}<br />
+              Correct flags: {{ playerTwoStats.correctFlags }}
+            </p>
+          </div>
+        </ion-card>
+
+        <ion-button expand="block" color="danger" (click)="exitGame()">
+          Exit
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</div>
