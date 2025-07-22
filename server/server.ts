@@ -21,13 +21,12 @@ const server = new Server(httpsServer, {
 });
 
 server.on("connection", (socket) => {
-  console.log("Cliente conectado:", socket.id);
+  console.log("Client connected:", socket.id);
 
   socket.emit("initialScores", playerScores);
 
 
   socket.on("saveCreateBoard", (board, callback) => {
-    console.log("Tablero recibido:", board);
     boardTable = board;
     callback(true);
   });
@@ -103,11 +102,11 @@ server.on("connection", (socket) => {
 
 
   socket.on("disconnect", () => {
-    console.log("Cliente desconectado:", socket.id);
+    console.log("Client disconnect:", socket.id);
   });
 });
 
 
 httpsServer.listen(8181, "0.0.0.0", () => {
-  console.log("Servidor Socket.io escuchando en puerto 8181");
+  console.log("Server Socket.io listening on port 8181");
 });
