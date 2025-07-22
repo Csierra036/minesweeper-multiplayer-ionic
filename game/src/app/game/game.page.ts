@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonButton,
-  IonCard,
-  IonTitle,
-  IonHeader,
-  IonToolbar,
-  IonModal,
+  IonContent, IonButton,
+  IonCard, IonTitle, IonHeader, IonToolbar, IonModal,
 } from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
@@ -23,16 +18,8 @@ import { Router } from '@angular/router';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [
-    IonContent,
-    CommonModule,
-    FormsModule,
-    IonButton,
-    IonCard,
-    IonTitle,
-    IonToolbar,
-    IonHeader,
-    IonModal,
+  imports: [ IonContent, CommonModule, FormsModule,
+    IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
   ],
 })
 export class GamePage implements OnInit {
@@ -52,6 +39,7 @@ export class GamePage implements OnInit {
   ) {
     this.playerOneStats.turn = true; // The game starting with the player 1
   }
+
 
   async ngOnInit() {
     // Obtain the player number from the route parameters
@@ -91,6 +79,7 @@ export class GamePage implements OnInit {
     this.updateScores(currentScores);
   }
 
+
   get boardSizeClass(): string {
     const cols = this.statusGame.boardGame?.size || 0;
 
@@ -100,6 +89,7 @@ export class GamePage implements OnInit {
     if (cols >= 27 && cols <= 32) return 'board-12';
     return 'board-10';
   }
+
 
   /**
    * Updates local scores with server data
@@ -121,6 +111,7 @@ export class GamePage implements OnInit {
       this.playerTwoStats.turn = scores[2].turn;
     }
   }
+
 
   async openCellOnBoard(row: number, col: number) {
     if (this.player == 0) return;
@@ -203,6 +194,7 @@ export class GamePage implements OnInit {
     }
   }
 
+
   async updateFlagCount(flagNumber: number = 1) {
     if (this.player === 1) {
       this.playerOneStats.flagSets += flagNumber;
@@ -211,6 +203,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   async updateCorrectFlagsCount(delta: number = 1) {
     if (this.player === 1) {
@@ -221,6 +214,7 @@ export class GamePage implements OnInit {
     await this.syncScores();
   }
 
+
   async updateMinesCount(cellsOpened: number) {
     if (this.player === 1) {
       this.playerOneStats.minesOpen += cellsOpened;
@@ -229,6 +223,7 @@ export class GamePage implements OnInit {
     }
     await this.syncScores();
   }
+
 
   async syncScores() {
     try {
@@ -241,6 +236,7 @@ export class GamePage implements OnInit {
     }
   }
 
+
   boardCleared(): boolean {
     const board = this.statusGame.boardGame.table;
     for (const row of board) {
@@ -252,6 +248,7 @@ export class GamePage implements OnInit {
     }
     return true;
   }
+
 
   async gameOverEvent() {
     this.statusGame.boardGame.gameOver = true;
@@ -289,6 +286,7 @@ export class GamePage implements OnInit {
     }
   }
 
+
   activateFlagMode() {
     if (this.player === 0) return;
 
@@ -298,6 +296,7 @@ export class GamePage implements OnInit {
     }
     this.activeFlagMode = this.gameService.activeFlagMode(this.activeFlagMode);
   }
+
 
   desactivateFlagMode() {
     if (this.player === 0) return;
@@ -311,12 +310,14 @@ export class GamePage implements OnInit {
     );
   }
 
+
   async exitGame() {
     this.finishModal = false;
     await this.gameService.resetAllScores();
     this.router.navigate(['/home']);
   }
 
+  
   getGameOverMessage(): string {
     if (this.playerOneStats.hitMine) {
       return 'Player 1 hit a mine! Player 2 wins!';
