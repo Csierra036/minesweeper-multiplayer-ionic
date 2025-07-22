@@ -44,4 +44,23 @@ export class CreateRoomPagePage implements OnInit {
       this.websocketsService.sendStartedGameStatus();
       this.router.navigate(['/game'],{queryParams: { turn: 1 }});
     }
+  
+    
+  async openCustomModal() {
+    const modal = await this.modalController.create({
+      component: CustomGameModalComponent,
+      componentProps: { size: 8, mines: 10 },
+      cssClass: 'custom-small-modal',
+      breakpoints: [0, 0.5, 1],  // Puntos de ruptura para hacerlo responsive
+      initialBreakpoint: 0.5,    // Comienza en el 50% de la pantalla
+      backdropDismiss: true,     // Permite cerrar haciendo clic fuera
+      showBackdrop: true,
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.setDifficulty(data.size, data.mines);
+    }
+  }
 }
