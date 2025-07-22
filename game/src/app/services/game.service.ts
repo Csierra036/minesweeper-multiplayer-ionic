@@ -28,13 +28,13 @@ export class GameService {
 
     if (success) {
       this.toastService.createToast(
-        `Coonected to ${serverIp}:${serverPort}`,
+        `Connected to ${serverIp}:${serverPort}`,
         'success'
       );
       return true;
     }
 
-    this.toastService.createToast('Error when restarting game', 'danger');
+    this.toastService.createToast('Error connect to server', 'danger');
     return false;
   }
 

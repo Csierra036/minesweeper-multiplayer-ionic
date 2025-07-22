@@ -268,19 +268,21 @@ export class GamePage implements OnInit {
     if (this.boardCleared()) {
       if (this.playerOneStats.minesOpen > this.playerTwoStats.minesOpen) {
         this.winner = 1;
-      } else if (
-        this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen
-      ) {
+      } 
+      else if (this.playerTwoStats.minesOpen > this.playerOneStats.minesOpen){
         this.winner = 2;
-      } else if (
-        this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags
-      ) {
-        this.winner = 1;
-      } else if (
-        this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags
-      ) {
-        this.winner = 2;
-      } else {
+      }
+
+      if(this.playerOneStats.minesOpen === this.playerTwoStats.minesOpen){
+        if (this.playerOneStats.correctFlags > this.playerTwoStats.correctFlags) {
+          this.winner = 1;
+        }
+        else if (this.playerTwoStats.correctFlags > this.playerOneStats.correctFlags) {
+          this.winner = 2;
+        }
+      }
+      
+      else {
         this.winner = null;
       }
     }
@@ -308,24 +310,6 @@ export class GamePage implements OnInit {
     this.activeFlagMode = this.gameService.desactiveFlagMode(
       this.activeFlagMode
     );
-  }
-
-
-  async restartGame() {
-    try {
-      this.playerOneStats.resetScoreBoard();
-      this.playerTwoStats.resetScoreBoard();
-
-      this.statusGame = new StatusGameDto();
-      this.finishModal = false;
-      this.winner = null;
-      this.activeFlagMode = false;
-      await this.gameService.resetAllScores();
-
-      this.toastService.createToast('Game restarted', 'success');
-    } catch (error) {
-      this.toastService.createToast('Error when restarting game', 'danger');
-    }
   }
 
 
