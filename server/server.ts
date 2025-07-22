@@ -74,8 +74,8 @@ server.on("connection", (socket) => {
     if (player === 1 || player === 2) {
       playerScores[player] = scores;
 
-      if (scores.gameOver) {
-        playerScores[player].gameOver = true;
+      if (scores.hitMine) {
+        playerScores[player].hitMine = true;
       }
 
       server.emit("scoresUpdated", playerScores);
