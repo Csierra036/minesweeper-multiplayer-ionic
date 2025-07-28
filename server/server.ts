@@ -4,7 +4,6 @@ import { Board } from "./board-pieces/board";
 import { scoreBoard } from "./board-pieces/scoreBoard";
 import { StatusGameDto } from "./status_game/stateGame.dto";
 
-
 const httpsServer = createServer({});
 
 let boardTable: Board = new Board();
@@ -15,28 +14,24 @@ let playerScores: { [key: number]: scoreBoard } = {
   2: new scoreBoard(),
 };
 
-
 const server = new Server(httpsServer, {
   cors: {
     origin: "*",
   },
 });
 
-
 server.on("connection", (socket) => {
-  console.log("Cliente conectado:", socket.id);
-
+  console.log("Client connected:", socket.id);
 
   socket.emit("initialScores", playerScores);
 
-  
+
   socket.on("saveCreateBoard", (board, callback) => {
-    console.log("Tablero recibido:", board);
     boardTable = board;
     callback(true);
   });
 
-  
+
   socket.on("getBoard", (callback) => {
     if (boardTable) {
       callback(boardTable);
@@ -56,13 +51,19 @@ server.on("connection", (socket) => {
     callback(true);
   });
 
-  
+
   socket.on("followGameStatus", (status, callback) => {
     if (status) {
       gameStatus = status;
-      server.emit("statusGame", gameStatus);
+
+      if (gameStatus.boardGame && gameStatus.boardGame.gameOver) {
+        console.log("Finished game");
+      }
+
+      server.emit("statusGame", status);
       callback(true);
-    } else {
+    }
+    else {
       callback(null);
     }
   });
@@ -72,15 +73,14 @@ server.on("connection", (socket) => {
     if (player === 1 || player === 2) {
       playerScores[player] = scores;
 
-      
-      if (scores.gameOver) {
-        playerScores[player].gameOver = true;
+      if (scores.hitMine) {
+        playerScores[player].hitMine = true;
       }
 
-      
       server.emit("scoresUpdated", playerScores);
       callback(true);
-    } else {
+    }
+    else {
       callback(false);
     }
   });
@@ -100,13 +100,13 @@ server.on("connection", (socket) => {
     callback(true);
   });
 
-  
+
   socket.on("disconnect", () => {
-    console.log("Cliente desconectado:", socket.id);
+    console.log("Client disconnect:", socket.id);
   });
 });
 
 
 httpsServer.listen(8181, "0.0.0.0", () => {
-  console.log("Servidor Socket.io escuchando en puerto 8181");
+  console.log("Server Socket.io listening on port 8181");
 });

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonCard, IonTitle,
-  IonHeader, IonToolbar, IonModal } from '@ionic/angular/standalone';
+import {
+  IonContent, IonButton,
+  IonCard, IonTitle, IonHeader, IonToolbar, IonModal,
+} from '@ionic/angular/standalone';
 import { scoreBoard } from './board-pieces/scoreBoard';
 import { GameService } from '../services/game.service';
 import { StatusGameDto } from './status_game/stateGame.dto';
@@ -16,10 +18,8 @@ import { Router } from '@angular/router';
   templateUrl: './game.page.html',
   styleUrls: ['./game.page.scss'],
   standalone: true,
-  imports: [
-    IonContent, CommonModule, FormsModule,
-    IonButton, IonCard, IonTitle, IonToolbar, IonHeader,
-    IonModal
+  imports: [ IonContent, CommonModule, FormsModule,
+    IonButton, IonCard, IonTitle, IonToolbar, IonHeader, IonModal,
   ],
 })
 export class GamePage implements OnInit {
@@ -35,10 +35,11 @@ export class GamePage implements OnInit {
     private readonly gameService: GameService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly toastService: ToastService,
+    private readonly toastService: ToastService
   ) {
     this.playerOneStats.turn = true; // The game starting with the player 1
   }
+
 
   async ngOnInit() {
     // Obtain the player number from the route parameters
@@ -63,7 +64,7 @@ export class GamePage implements OnInit {
       this.playerOneStats.turn = status.turnGame === 1;
       this.playerTwoStats.turn = status.turnGame === 2;
 
-      if (this.statusGame.boardGame.gameOver) {
+      if (this.statusGame.boardGame.gameOver && !this.finishModal) {
         this.gameOverEvent();
       }
     });
@@ -166,7 +167,6 @@ export class GamePage implements OnInit {
             }
             await this.syncScores();
 
-            this.statusGame.boardGame.gameOver = true;
             this.gameOverEvent();
             return;
           }
@@ -251,8 +251,10 @@ export class GamePage implements OnInit {
 
 
   async gameOverEvent() {
-    this.finishModal = true;
+    this.statusGame.boardGame.gameOver = true;
     await this.gameService.finishGame();
+    await this.gameService.sendGameStatus(this.statusGame);
+    this.finishModal = true;
 
     if (this.playerOneStats.hitMine) {
       this.winner = 2;
@@ -297,7 +299,6 @@ export class GamePage implements OnInit {
 
 
   desactivateFlagMode() {
-    console.log(this.player);
     if (this.player === 0) return;
 
     if (this.statusGame.turnGame !== this.player) {
@@ -310,31 +311,13 @@ export class GamePage implements OnInit {
   }
 
 
-  async restartGame() {
-    try {
-      this.playerOneStats.resetScoreBoard();
-      this.playerTwoStats.resetScoreBoard();
-
-      this.statusGame = new StatusGameDto();
-      this.finishModal = false;
-      this.winner = null;
-      this.activeFlagMode = false;
-      await this.gameService.resetAllScores();
-
-      this.toastService.createToast('Game restarted', 'success');
-    } catch (error) {
-      this.toastService.createToast('Error when restarting game', 'danger');
-    }
-  }
-
-
   async exitGame() {
     this.finishModal = false;
     await this.gameService.resetAllScores();
     this.router.navigate(['/home']);
   }
 
-
+  
   getGameOverMessage(): string {
     if (this.playerOneStats.hitMine) {
       return 'Player 1 hit a mine! Player 2 wins!';

@@ -63,15 +63,4 @@ export class CreateRoomPagePage implements OnInit {
       this.setDifficulty(data.size, data.mines);
     }
   }
-
-
-  confirmCustomGame() {
-    const maxMines = this.customSize * this.customSize - 1;
-    if (this.customSize < 2 || this.customMines < 1 || this.customMines > maxMines) {
-      alert(`Valores inválidos. Tamaño mínimo 2 y minas entre 1 y ${maxMines}.`);
-      return;
-    }
-    this.openCustomButton = false;
-    this.setDifficulty(this.customSize, this.customMines);
-  }
 }
